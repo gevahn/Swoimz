@@ -39,6 +39,7 @@ void ASpawnVolume::BeginPlay()
 		SwoimersArray[i]->AliFactor = AliFactor;
 		SwoimersArray[i]->CohFactor = CohFactor;
 		SwoimersArray[i]->CenFactor = CenFactor;
+		SwoimersArray[i]->AvoFactor = AvoFactor;
 		SwoimersArray[i]->SepDistance = SepDistance;
 		SwoimersArray[i]->AliDistance = AliDistance;
 		SwoimersArray[i]->CohDistance = CohDistance;

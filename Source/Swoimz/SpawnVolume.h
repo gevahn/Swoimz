@@ -34,13 +34,15 @@ public:
 		float Forcelimit;
 
 	UPROPERTY(EditAnywhere)
-		int32 SepFactor;
+		float SepFactor;
 	UPROPERTY(EditAnywhere)
-		int32 AliFactor;
+		float AliFactor;
 	UPROPERTY(EditAnywhere)
-		int32 CohFactor;
+		float CohFactor;
 	UPROPERTY(EditAnywhere)
-		int32 CenFactor;
+		float CenFactor;
+	UPROPERTY(EditAnywhere)
+		float AvoFactor;
 	UPROPERTY(EditAnywhere)
 		float SepDistance;
 	UPROPERTY(EditAnywhere)

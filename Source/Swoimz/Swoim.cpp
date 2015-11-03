@@ -94,17 +94,30 @@ void ASwoim::Tick(float DeltaTime)
 
 	FVector cen = seek(center);
 
+	FHitResult HitData(ForceInit);
+
+	FVector avoid = FVector(0, 0, 0);
+	if (TraceAhead(NewLocation, NewLocation + 10 * DeltaTime * velocity, World, HitData)) {		
+		FVector ImpactNormalVec = HitData.ImpactNormal;
+				
+		FVector DirectionToAvoidImpact = ImpactNormalVec - velocity.GetSafeNormal() * FVector::DotProduct(ImpactNormalVec, velocity.GetSafeNormal());
+		avoid = DirectionToAvoidImpact  / HitData.Distance;
+		UE_LOG(LogTemp, Warning, TEXT("mesh ahead, avoid at dir X %f"), avoid.X);
+		UE_LOG(LogTemp, Warning, TEXT("mesh ahead, avoid at dir Y %f"), avoid.Y);
+		UE_LOG(LogTemp, Warning, TEXT("mesh ahead, avoid at dir Z %f"), avoid.Z);
+		UE_LOG(LogTemp, Warning, TEXT("mesh ahead, distance %f"), HitData.Distance);
+
+	}
+
 	//center = center + 30 * DeltaTime*FVector(-FMath::Sin(DeltaTime), FMath::Cos(DeltaTime), 0);
 
-	UE_LOG(LogTemp, Warning, TEXT("center pos X %f"), center.X);
-	UE_LOG(LogTemp, Warning, TEXT("center pos Y %f"), center.Y);
-	UE_LOG(LogTemp, Warning, TEXT("center pos Z %f"), center.Z);
 	sep = sep * SepFactor;
 	ali = ali * AliFactor;
 	coh = coh * CohFactor;
 	cen = cen * CenFactor;
+	avoid = avoid * AvoFactor;
 
-	acceleration = sep + ali + coh + cen;
+	acceleration = sep + ali + coh + cen + avoid;
 
 	if (acceleration.Size() > Forcelimit) {
 		acceleration = acceleration.GetUnsafeNormal() * Forcelimit;
@@ -243,3 +256,37 @@ void ASwoim::OnDownCohPressed() {
 }
 
 
+bool ASwoim::TraceAhead(const FVector& Start, const FVector& End, UWorld* World, FHitResult& HitOut) {
+	if (!World)
+	{
+		return false;
+	}
+	bool ReturnPhysMat = false;
+	FCollisionQueryParams TraceParams(FName(TEXT("VictoreCore Trace")), true, this);
+	TraceParams.bTraceComplex = true;
+	TraceParams.bReturnPhysicalMaterial = ReturnPhysMat;
+	TraceParams.AddIgnoredActor(this);
+
+	ECollisionChannel CollisionChannel = ECollisionChannel::ECC_WorldStatic;
+	//Re-initialize hit info
+	HitOut = FHitResult(ForceInit);
+
+	//Trace!
+	World->LineTraceSingleByChannel(
+		HitOut,		//result
+		Start,	//start
+		End, //end
+		CollisionChannel, //collision channel
+		TraceParams
+		);
+
+	//Hit any Actor?
+	return (HitOut.GetActor() != NULL);
+
+}
+
+FVector ASwoim::avoid(FHitResult& HitData) {
+	// Implement this
+	
+	return FVector(0, 0, 0);
+}
