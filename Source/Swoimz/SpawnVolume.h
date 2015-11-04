@@ -42,13 +42,19 @@ public:
 	UPROPERTY(EditAnywhere)
 		float CenFactor;
 	UPROPERTY(EditAnywhere)
-		float AvoFactor;
+		float AvoFactor1;
+	UPROPERTY(EditAnywhere)
+		float AvoFactor2;
 	UPROPERTY(EditAnywhere)
 		float SepDistance;
 	UPROPERTY(EditAnywhere)
 		float AliDistance;
 	UPROPERTY(EditAnywhere)
 		float CohDistance;
+	UPROPERTY(EditAnywhere)
+		float LookAheadDistance;
+	UPROPERTY(EditAnywhere)
+	float LookAheadDecay;
 
 protected:
 	// the pickup to spawn

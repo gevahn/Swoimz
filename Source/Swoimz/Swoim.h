@@ -16,6 +16,7 @@ public:
 
 	FVector velocity;
 	FVector acceleration;
+	FVector avoidAhead;
 
 	FVector center;
 	float mass;
@@ -42,7 +43,11 @@ public:
 		float CohFactor;
 	UPROPERTY(EditAnywhere)
 		float CenFactor;
-	float AvoFactor;
+	UPROPERTY(EditAnywhere)
+		float LookAheadDistance;
+	float LookAheadDecay;
+	float AvoFactor1;
+	float AvoFactor2;
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 

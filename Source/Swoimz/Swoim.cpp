@@ -16,6 +16,7 @@ ASwoim::ASwoim()
 
 	velocity = 750 * (FVector(FMath::Rand(), FMath::Rand(), FMath::Rand()));
 	acceleration = FVector(0, 0, 0);
+	avoidAhead = FVector(0, 0, 0);
 
 
 	mass = 1;
@@ -91,33 +92,41 @@ void ASwoim::Tick(float DeltaTime)
 		center.Z = 300;
 	}
 
-
+	
 	FVector cen = seek(center);
 
 	FHitResult HitData(ForceInit);
 
-	FVector avoid = FVector(0, 0, 0);
-	if (TraceAhead(NewLocation, NewLocation + 10 * DeltaTime * velocity, World, HitData)) {		
+	
+	if (TraceAhead(NewLocation, NewLocation + LookAheadDistance * DeltaTime * velocity, World, HitData)) {
 		FVector ImpactNormalVec = HitData.ImpactNormal;
 				
 		FVector DirectionToAvoidImpact = ImpactNormalVec - velocity.GetSafeNormal() * FVector::DotProduct(ImpactNormalVec, velocity.GetSafeNormal());
-		avoid = DirectionToAvoidImpact  / HitData.Distance;
-		UE_LOG(LogTemp, Warning, TEXT("mesh ahead, avoid at dir X %f"), avoid.X);
-		UE_LOG(LogTemp, Warning, TEXT("mesh ahead, avoid at dir Y %f"), avoid.Y);
-		UE_LOG(LogTemp, Warning, TEXT("mesh ahead, avoid at dir Z %f"), avoid.Z);
-		UE_LOG(LogTemp, Warning, TEXT("mesh ahead, distance %f"), HitData.Distance);
+		avoidAhead = DirectionToAvoidImpact / (HitData.Distance - 20);		
+		//UE_LOG(LogTemp, Warning, TEXT("mesh ahead, avoid at dir X %f"), avoid.X);
+		//UE_LOG(LogTemp, Warning, TEXT("mesh ahead, avoid at dir Y %f"), avoid.Y);
+		//UE_LOG(LogTemp, Warning, TEXT("mesh ahead, avoid at dir Z %f"), avoid.Z);
+		//UE_LOG(LogTemp, Warning, TEXT("mesh ahead, distance %f"), HitData.Distance);
 
 	}
 
+	FVector avoidClosest = FVector(0, 0, 0);
+	//if (ActorGetDistanceToCollision(NewLocation, ECollisionChannel::ECC_WorldStatic, avoidClosest) > 0) {
+	//	if (avoidClosest.Size() < 200){
+	//		avoidClosest = NewLocation - avoidClosest;
+	//	}
+	//}
 	//center = center + 30 * DeltaTime*FVector(-FMath::Sin(DeltaTime), FMath::Cos(DeltaTime), 0);
 
 	sep = sep * SepFactor;
 	ali = ali * AliFactor;
 	coh = coh * CohFactor;
 	cen = cen * CenFactor;
-	avoid = avoid * AvoFactor;
+	FVector avoid = (avoidAhead)* AvoFactor1 + avoidClosest * AvoFactor2;
 
 	acceleration = sep + ali + coh + cen + avoid;
+
+	avoidAhead = avoidAhead / LookAheadDecay;
 
 	if (acceleration.Size() > Forcelimit) {
 		acceleration = acceleration.GetUnsafeNormal() * Forcelimit;
