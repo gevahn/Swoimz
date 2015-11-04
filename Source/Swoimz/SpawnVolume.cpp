@@ -39,9 +39,13 @@ void ASpawnVolume::BeginPlay()
 		SwoimersArray[i]->AliFactor = AliFactor;
 		SwoimersArray[i]->CohFactor = CohFactor;
 		SwoimersArray[i]->CenFactor = CenFactor;
+		SwoimersArray[i]->AvoFactor1 = AvoFactor1;
+		SwoimersArray[i]->AvoFactor2 = AvoFactor2;
 		SwoimersArray[i]->SepDistance = SepDistance;
 		SwoimersArray[i]->AliDistance = AliDistance;
 		SwoimersArray[i]->CohDistance = CohDistance;
+		SwoimersArray[i]->LookAheadDistance = LookAheadDistance;
+		SwoimersArray[i]->LookAheadDecay = LookAheadDecay;
 
 	}
 	UE_LOG(LogTemp, Warning, TEXT("swoimers updated"));

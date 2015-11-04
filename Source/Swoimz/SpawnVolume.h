@@ -34,19 +34,27 @@ public:
 		float Forcelimit;
 
 	UPROPERTY(EditAnywhere)
-		int32 SepFactor;
+		float SepFactor;
 	UPROPERTY(EditAnywhere)
-		int32 AliFactor;
+		float AliFactor;
 	UPROPERTY(EditAnywhere)
-		int32 CohFactor;
+		float CohFactor;
 	UPROPERTY(EditAnywhere)
-		int32 CenFactor;
+		float CenFactor;
+	UPROPERTY(EditAnywhere)
+		float AvoFactor1;
+	UPROPERTY(EditAnywhere)
+		float AvoFactor2;
 	UPROPERTY(EditAnywhere)
 		float SepDistance;
 	UPROPERTY(EditAnywhere)
 		float AliDistance;
 	UPROPERTY(EditAnywhere)
 		float CohDistance;
+	UPROPERTY(EditAnywhere)
+		float LookAheadDistance;
+	UPROPERTY(EditAnywhere)
+	float LookAheadDecay;
 
 protected:
 	// the pickup to spawn

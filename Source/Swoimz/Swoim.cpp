@@ -16,6 +16,7 @@ ASwoim::ASwoim()
 
 	velocity = 750 * (FVector(FMath::Rand(), FMath::Rand(), FMath::Rand()));
 	acceleration = FVector(0, 0, 0);
+	avoidAhead = FVector(0, 0, 0);
 
 
 	mass = 1;
@@ -23,6 +24,8 @@ ASwoim::ASwoim()
 	// Create mesh
 	SwarmerMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("SwarmerMesh"));
 	RootComponent = SwarmerMesh;
+
+
 
 }
 
@@ -41,22 +44,89 @@ void ASwoim::Tick(float DeltaTime)
 
 	acceleration = FVector(0, 0, 0);
 
+	FVector NewLocation = GetActorLocation();
+	FVector HitLocation;
+	//UPrimitiveComponent ** PrimitiveHit;
 
 
+
+	//ActorGetDistanceToCollision(GetActorLocation(), ECollisionChannel::ECC_WorldStatic, HitLocation, PrimitiveHit);
+
+	/*FVector2D MousePosition;
+
+	UWorld* const World = GetWorld();
+	const ULocalPlayer* LocalPlayer;
+	if (World) {
+		LocalPlayer = World->GetFirstLocalPlayerFromController();
+		if (LocalPlayer && LocalPlayer->ViewportClient)
+		{
+			MousePosition = LocalPlayer->ViewportClient->GetMousePosition();
+		}
+	}*/
+
+	UWorld* const World = GetWorld();
+	FVector mouseLocation, mouseDirection;
+	APlayerController* playerController = World ->GetFirstPlayerController();
+	playerController->DeprojectMousePositionToWorld(mouseLocation, mouseDirection);
+
+
+	/*
+	UE_LOG(LogTemp, Warning, TEXT("Mouse pos X %f"), MousePosition.X);
+	UE_LOG(LogTemp, Warning, TEXT("Mouse pos Y %f"), MousePosition.Y);*/
+	
+	
+	
 	FVector sep = separate();
 	FVector ali = align();
 	FVector coh = cohesion();
 
+	FVector CameraLocation;
+	FRotator CameraDirection;
+	playerController->GetPlayerViewPoint(CameraLocation, CameraDirection);
+		
+	
+	
+	if (!mouseLocation.ContainsNaN()) {
+		float t = CameraLocation.Z / (CameraLocation - mouseLocation).Z;
+		center = (mouseLocation - CameraLocation) * t + CameraLocation;
+		center.Z = 300;
+	}
+
+	
 	FVector cen = seek(center);
 
-	center = center + 30 * DeltaTime*FVector(-FMath::Sin(DeltaTime), FMath::Cos(DeltaTime), 0);
+	FHitResult HitData(ForceInit);
+
+	
+	if (TraceAhead(NewLocation, NewLocation + LookAheadDistance * DeltaTime * velocity, World, HitData)) {
+		FVector ImpactNormalVec = HitData.ImpactNormal;
+				
+		FVector DirectionToAvoidImpact = ImpactNormalVec - velocity.GetSafeNormal() * FVector::DotProduct(ImpactNormalVec, velocity.GetSafeNormal());
+		avoidAhead = DirectionToAvoidImpact / (HitData.Distance - 20);		
+		//UE_LOG(LogTemp, Warning, TEXT("mesh ahead, avoid at dir X %f"), avoid.X);
+		//UE_LOG(LogTemp, Warning, TEXT("mesh ahead, avoid at dir Y %f"), avoid.Y);
+		//UE_LOG(LogTemp, Warning, TEXT("mesh ahead, avoid at dir Z %f"), avoid.Z);
+		//UE_LOG(LogTemp, Warning, TEXT("mesh ahead, distance %f"), HitData.Distance);
+
+	}
+
+	FVector avoidClosest = FVector(0, 0, 0);
+	//if (ActorGetDistanceToCollision(NewLocation, ECollisionChannel::ECC_WorldStatic, avoidClosest) > 0) {
+	//	if (avoidClosest.Size() < 200){
+	//		avoidClosest = NewLocation - avoidClosest;
+	//	}
+	//}
+	//center = center + 30 * DeltaTime*FVector(-FMath::Sin(DeltaTime), FMath::Cos(DeltaTime), 0);
 
 	sep = sep * SepFactor;
 	ali = ali * AliFactor;
 	coh = coh * CohFactor;
 	cen = cen * CenFactor;
+	FVector avoid = (avoidAhead)* AvoFactor1 + avoidClosest * AvoFactor2;
 
-	acceleration = sep + ali + coh + cen;
+	acceleration = sep + ali + coh + cen + avoid;
+
+	avoidAhead = avoidAhead / LookAheadDecay;
 
 	if (acceleration.Size() > Forcelimit) {
 		acceleration = acceleration.GetUnsafeNormal() * Forcelimit;
@@ -67,7 +137,7 @@ void ASwoim::Tick(float DeltaTime)
 	velocity = velocity + acceleration;
 
 	
-	FVector NewLocation = GetActorLocation();
+	
 
 	if (velocity.Size() > Speedlimit) {
 		velocity = velocity.GetSafeNormal() * Speedlimit;
@@ -77,8 +147,13 @@ void ASwoim::Tick(float DeltaTime)
 	//}
 
 	NewLocation = NewLocation + velocity * DeltaTime;
+	
+	FHitResult* SweepHitData = &HitData; 
 
-	SetActorLocation(NewLocation,true);
+	while (!SetActorLocation(NewLocation, true, SweepHitData)) {
+		FVector MoveToAvoidHit = SweepHitData->ImpactNormal;
+		NewLocation = NewLocation + MoveToAvoidHit * 0.1;
+	}
 	SetActorRotation(velocity.Rotation() + FRotator(-90, 0, 0));
 
 
@@ -195,3 +270,37 @@ void ASwoim::OnDownCohPressed() {
 }
 
 
+bool ASwoim::TraceAhead(const FVector& Start, const FVector& End, UWorld* World, FHitResult& HitOut) {
+	if (!World)
+	{
+		return false;
+	}
+	bool ReturnPhysMat = false;
+	FCollisionQueryParams TraceParams(FName(TEXT("VictoreCore Trace")), true, this);
+	TraceParams.bTraceComplex = true;
+	TraceParams.bReturnPhysicalMaterial = ReturnPhysMat;
+	TraceParams.AddIgnoredActor(this);
+
+	ECollisionChannel CollisionChannel = ECollisionChannel::ECC_WorldStatic;
+	//Re-initialize hit info
+	HitOut = FHitResult(ForceInit);
+
+	//Trace!
+	World->LineTraceSingleByChannel(
+		HitOut,		//result
+		Start,	//start
+		End, //end
+		CollisionChannel, //collision channel
+		TraceParams
+		);
+
+	//Hit any Actor?
+	return (HitOut.GetActor() != NULL);
+
+}
+
+FVector ASwoim::avoid(FHitResult& HitData) {
+	// Implement this
+	
+	return FVector(0, 0, 0);
+}

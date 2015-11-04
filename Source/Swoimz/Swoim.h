@@ -16,6 +16,7 @@ public:
 
 	FVector velocity;
 	FVector acceleration;
+	FVector avoidAhead;
 
 	FVector center;
 	float mass;
@@ -27,6 +28,7 @@ public:
 
 	float Forcelimit;
 
+	
 
 
 	float SepDistance;
@@ -34,14 +36,18 @@ public:
 	float CohDistance;
 
 	UPROPERTY(EditAnywhere)
-		int32 SepFactor;
+		float SepFactor;
 	UPROPERTY(EditAnywhere)
-		int32 AliFactor;
+		float AliFactor;
 	UPROPERTY(EditAnywhere)
-		int32 CohFactor;
+		float CohFactor;
 	UPROPERTY(EditAnywhere)
-		int32 CenFactor;
-
+		float CenFactor;
+	UPROPERTY(EditAnywhere)
+		float LookAheadDistance;
+	float LookAheadDecay;
+	float AvoFactor1;
+	float AvoFactor2;
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
@@ -57,13 +63,14 @@ public:
 	// Return the mesh for the swarmer
 	FORCEINLINE class UStaticMeshComponent* GetMesh() const { return SwarmerMesh; }
 
-
+	bool TraceAhead(const FVector& Start, const FVector& End, UWorld* World, FHitResult& HitOut);
 
 	FVector separate();
 
 	FVector align();
 	FVector cohesion();
 	FVector seek(FVector target);
+	FVector avoid(FHitResult& HitData);
 
 
 private:
