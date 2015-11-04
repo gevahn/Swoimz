@@ -147,8 +147,13 @@ void ASwoim::Tick(float DeltaTime)
 	//}
 
 	NewLocation = NewLocation + velocity * DeltaTime;
+	
+	FHitResult* SweepHitData = &HitData; 
 
-	SetActorLocation(NewLocation,true);
+	while (!SetActorLocation(NewLocation, true, SweepHitData)) {
+		FVector MoveToAvoidHit = SweepHitData->ImpactNormal;
+		NewLocation = NewLocation + MoveToAvoidHit * 0.1;
+	}
 	SetActorRotation(velocity.Rotation() + FRotator(-90, 0, 0));
 
 
