@@ -3,7 +3,10 @@
 #pragma once
 
 #include "GameFramework/Actor.h"
+#include "SwoimController.h"
 #include "Swoim.generated.h"
+
+
 
 UCLASS()
 class SWOIMZ_API ASwoim : public AActor
@@ -29,7 +32,7 @@ public:
 	float Forcelimit;
 
 	
-
+	TWeakObjectPtr<ASwoimController> SwoimController;
 
 	float SepDistance;
 	float AliDistance;
