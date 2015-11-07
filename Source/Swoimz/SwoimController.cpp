@@ -25,8 +25,7 @@ ASwoimController::ASwoimController()
 void ASwoimController::BeginPlay()
 {
 	Super::BeginPlay();
-
-	Super::BeginPlay();
+	
 	TArray<ASwoim*> SwoimersArray;
 	for (int i = 0; i < 100; i++){
 		SwoimersArray.Add(SpawnSwoimer());
@@ -54,6 +53,8 @@ void ASwoimController::BeginPlay()
 	UE_LOG(LogTemp, Warning, TEXT("swoimers updated"));
 
 	
+
+	
 }
 
 // Called every frame
@@ -61,6 +62,22 @@ void ASwoimController::Tick( float DeltaTime )
 {
 	Super::Tick( DeltaTime );
 
+	FVector mouseLocation, mouseDirection;
+	UWorld* const World = GetWorld();
+	APlayerController* playerController = World->GetFirstPlayerController();
+	playerController->DeprojectMousePositionToWorld(mouseLocation, mouseDirection);
+
+
+	FVector CameraLocation;
+	FRotator CameraDirection;
+	playerController->GetPlayerViewPoint(CameraLocation, CameraDirection);
+
+	if (!mouseLocation.ContainsNaN()) {
+		float t = CameraLocation.Z / (CameraLocation - mouseLocation).Z;
+		center = (mouseLocation - CameraLocation) * t + CameraLocation;
+		center.Z = 300;
+	}
+	//SetActorLocation(center);
 }
 
 FVector ASwoimController::GetRandomPointInVolume()

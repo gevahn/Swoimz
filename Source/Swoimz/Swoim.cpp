@@ -47,54 +47,21 @@ void ASwoim::Tick(float DeltaTime)
 
 	FVector NewLocation = GetActorLocation();
 	FVector HitLocation;
-	//UPrimitiveComponent ** PrimitiveHit;
 
-
-
-	//ActorGetDistanceToCollision(GetActorLocation(), ECollisionChannel::ECC_WorldStatic, HitLocation, PrimitiveHit);
-
-	/*FVector2D MousePosition;
 
 	UWorld* const World = GetWorld();
-	const ULocalPlayer* LocalPlayer;
-	if (World) {
-		LocalPlayer = World->GetFirstLocalPlayerFromController();
-		if (LocalPlayer && LocalPlayer->ViewportClient)
-		{
-			MousePosition = LocalPlayer->ViewportClient->GetMousePosition();
-		}
-	}*/
 
-	UWorld* const World = GetWorld();
-	FVector mouseLocation, mouseDirection;
-	APlayerController* playerController = World ->GetFirstPlayerController();
-	playerController->DeprojectMousePositionToWorld(mouseLocation, mouseDirection);
+	if (SwoimController.IsValid()) {
+		center = SwoimController->center;
+		//UE_LOG(LogTemp, Warning, TEXT("SwoimController is Valid"));
+	}
 
+	FVector cen = seek(center);
 
-	/*
-	UE_LOG(LogTemp, Warning, TEXT("Mouse pos X %f"), MousePosition.X);
-	UE_LOG(LogTemp, Warning, TEXT("Mouse pos Y %f"), MousePosition.Y);*/
-	
-	
-	
 	FVector sep = separate();
 	FVector ali = align();
 	FVector coh = cohesion();
 
-	FVector CameraLocation;
-	FRotator CameraDirection;
-	playerController->GetPlayerViewPoint(CameraLocation, CameraDirection);
-		
-	
-	
-	if (!mouseLocation.ContainsNaN()) {
-		float t = CameraLocation.Z / (CameraLocation - mouseLocation).Z;
-		center = (mouseLocation - CameraLocation) * t + CameraLocation;
-		center.Z = 300;
-	}
-
-	
-	FVector cen = seek(center);
 
 	FHitResult HitData(ForceInit);
 

@@ -23,6 +23,8 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
 
+	FVector center;
+
 	// reutrns the box to spawn
 	FORCEINLINE UBoxComponent* GetWhereToSpawn() const { return WhereToSpawn; }
 
