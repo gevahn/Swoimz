@@ -61,6 +61,11 @@ void ASwoim::Tick(float DeltaTime)
 	FVector sep = separate();
 	FVector ali = align();
 	FVector coh = cohesion();
+	FVector atk = FVector(0,0,0);
+	if (targetSwoimer.IsValid()) {
+		atk = attack(targetSwoimer);
+	}
+
 
 
 	FHitResult HitData(ForceInit);
@@ -90,9 +95,10 @@ void ASwoim::Tick(float DeltaTime)
 	ali = ali * AliFactor;
 	coh = coh * CohFactor;
 	cen = cen * CenFactor;
+	atk = atk * AtkFactor;
 	FVector avoid = (avoidAhead)* AvoFactor1 + avoidClosest * AvoFactor2;
 
-	acceleration = sep + ali + coh + cen + avoid;
+	acceleration = sep + ali + coh + cen + avoid + atk;
 
 	avoidAhead = avoidAhead / LookAheadDecay;
 
@@ -271,4 +277,9 @@ FVector ASwoim::avoid(FHitResult& HitData) {
 	// Implement this
 	
 	return FVector(0, 0, 0);
+}
+
+FVector ASwoim::attack(TWeakObjectPtr<ASwoim> targetSwoimer) {	
+	return targetSwoimer->GetActorLocation() - GetActorLocation();
+	
 }

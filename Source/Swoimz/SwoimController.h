@@ -2,6 +2,7 @@
 
 #pragma once
 
+
 #include "GameFramework/Pawn.h"
 #include "SwoimController.generated.h"
 
@@ -24,6 +25,8 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
 
 	FVector center;
+
+	TArray<class ASwoim*> SwoimersArray;
 
 	// reutrns the box to spawn
 	FORCEINLINE UBoxComponent* GetWhereToSpawn() const { return WhereToSpawn; }
@@ -57,9 +60,18 @@ public:
 	UPROPERTY(EditAnywhere)
 		float CohDistance;
 	UPROPERTY(EditAnywhere)
+		float AtkFactor;
+	UPROPERTY(EditAnywhere)
 		float LookAheadDistance;
 	UPROPERTY(EditAnywhere)
 		float LookAheadDecay;
+
+	UPROPERTY(EditAnywhere)
+		float attackRadius;
+
+	void AttackSwoim();
+
+	void Disengage();
 
 protected:
 	// the pickup to spawn

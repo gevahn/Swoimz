@@ -4,6 +4,7 @@
 #include "SwoimController.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Swoim.h"
+#include "EngineUtils.h"
 
 #define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White,text)
 
@@ -26,7 +27,7 @@ void ASwoimController::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	TArray<ASwoim*> SwoimersArray;
+	SwoimersArray;
 	for (int i = 0; i < 100; i++){
 		SwoimersArray.Add(SpawnSwoimer());
 	}
@@ -40,13 +41,14 @@ void ASwoimController::BeginPlay()
 		SwoimersArray[i]->AliFactor = AliFactor;
 		SwoimersArray[i]->CohFactor = CohFactor;
 		SwoimersArray[i]->CenFactor = CenFactor;
+		SwoimersArray[i]->AtkFactor = AtkFactor;
 		SwoimersArray[i]->AvoFactor1 = AvoFactor1;
 		SwoimersArray[i]->AvoFactor2 = AvoFactor2;
 		SwoimersArray[i]->SepDistance = SepDistance;
 		SwoimersArray[i]->AliDistance = AliDistance;
 		SwoimersArray[i]->CohDistance = CohDistance;
 		SwoimersArray[i]->LookAheadDistance = LookAheadDistance;
-		SwoimersArray[i]->LookAheadDecay = LookAheadDecay;
+		SwoimersArray[i]->LookAheadDecay = LookAheadDecay;		
 		SwoimersArray[i]->SwoimController = TWeakObjectPtr<ASwoimController>(this);
 
 	}
@@ -94,6 +96,9 @@ void ASwoimController::SetupPlayerInputComponent(class UInputComponent* InputCom
 {
 	Super::SetupPlayerInputComponent(InputComponent);
 
+	InputComponent->BindAction("Attack", IE_Pressed, this, &ASwoimController::AttackSwoim);
+	InputComponent->BindAction("Disengage", IE_Released, this, &ASwoimController::Disengage);
+
 }
 
 
@@ -119,4 +124,25 @@ ASwoim* ASwoimController::SpawnSwoimer()
 		}
 	}
 	return NULL;
+}
+
+void ASwoimController::AttackSwoim() {
+	TArray<ASwoim*> targetSwoimers;
+	for (TObjectIterator<ASwoimController> itr; itr; ++itr) {
+		float distanceToSwoim = (itr->center - center).Size();
+		if (distanceToSwoim > 0 && distanceToSwoim < attackRadius) {
+			targetSwoimers.Append(itr->SwoimersArray);
+		}
+	}
+
+	for (auto& other : SwoimersArray) {
+		int32 indexToAttack = FMath::RandRange(0, targetSwoimers.Num());
+		other->targetSwoimer = targetSwoimers[indexToAttack];
+	}
+}
+
+void ASwoimController::Disengage() {
+	for (auto& other : SwoimersArray) {		
+		other->targetSwoimer = NULL;
+	}
 }

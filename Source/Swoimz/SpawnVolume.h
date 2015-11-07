@@ -1,7 +1,9 @@
 #pragma once
 
 
+
 #include "GameFramework/Actor.h"
+#include "Swoim.h"
 #include "SpawnVolume.generated.h"
 
 
@@ -54,7 +56,11 @@ public:
 	UPROPERTY(EditAnywhere)
 		float LookAheadDistance;
 	UPROPERTY(EditAnywhere)
+		float AtkFactor;
+	UPROPERTY(EditAnywhere)
 	float LookAheadDecay;
+
+	TArray<class ASwoim*> SwoimersArray;
 
 protected:
 	// the pickup to spawn

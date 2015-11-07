@@ -25,7 +25,7 @@ ASpawnVolume::ASpawnVolume()
 void ASpawnVolume::BeginPlay()
 {
 	Super::BeginPlay();
-	TArray<ASwoim*> SwoimersArray;
+	SwoimersArray;
 	for (int i = 0; i < 100; i++){
 		SwoimersArray.Add(SpawnSwoimer());
 	}
@@ -41,9 +41,10 @@ void ASpawnVolume::BeginPlay()
 		SwoimersArray[i]->CenFactor = CenFactor;
 		SwoimersArray[i]->AvoFactor1 = AvoFactor1;
 		SwoimersArray[i]->AvoFactor2 = AvoFactor2;
+		SwoimersArray[i]->AtkFactor = AtkFactor;
 		SwoimersArray[i]->SepDistance = SepDistance;
 		SwoimersArray[i]->AliDistance = AliDistance;
-		SwoimersArray[i]->CohDistance = CohDistance;
+		SwoimersArray[i]->CohDistance = CohDistance;		
 		SwoimersArray[i]->LookAheadDistance = LookAheadDistance;
 		SwoimersArray[i]->LookAheadDecay = LookAheadDecay;
 

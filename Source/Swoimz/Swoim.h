@@ -3,7 +3,7 @@
 #pragma once
 
 #include "GameFramework/Actor.h"
-#include "SwoimController.h"
+
 #include "Swoim.generated.h"
 
 
@@ -32,7 +32,8 @@ public:
 	float Forcelimit;
 
 	
-	TWeakObjectPtr<ASwoimController> SwoimController;
+	TWeakObjectPtr<class ASwoimController> SwoimController;
+	TWeakObjectPtr<ASwoim> targetSwoimer;
 
 	float SepDistance;
 	float AliDistance;
@@ -46,6 +47,8 @@ public:
 		float CohFactor;
 	UPROPERTY(EditAnywhere)
 		float CenFactor;
+	UPROPERTY(EditAnywhere)
+		float AtkFactor;
 	UPROPERTY(EditAnywhere)
 		float LookAheadDistance;
 	float LookAheadDecay;
@@ -74,6 +77,8 @@ public:
 	FVector cohesion();
 	FVector seek(FVector target);
 	FVector avoid(FHitResult& HitData);
+
+	FVector attack(TWeakObjectPtr<ASwoim> targetSwoimer);
 
 
 private:
