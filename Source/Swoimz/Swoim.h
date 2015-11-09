@@ -33,7 +33,7 @@ public:
 
 	
 	TWeakObjectPtr<class ASwoimController> SwoimController;
-	TWeakObjectPtr<ASwoim> targetSwoimer;
+	ASwoim* targetSwoimer;
 
 	float SepDistance;
 	float AliDistance;
@@ -78,7 +78,7 @@ public:
 	FVector seek(FVector target);
 	FVector avoid(FHitResult& HitData);
 
-	FVector attack(TWeakObjectPtr<ASwoim> targetSwoimer);
+	FVector attack(ASwoim* targetSwoimer);
 
 
 private:

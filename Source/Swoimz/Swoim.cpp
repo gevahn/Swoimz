@@ -26,6 +26,8 @@ ASwoim::ASwoim()
 	SwarmerMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("SwarmerMesh"));
 	RootComponent = SwarmerMesh;
 
+	targetSwoimer = NULL;
+
 
 
 }
@@ -51,10 +53,11 @@ void ASwoim::Tick(float DeltaTime)
 
 	UWorld* const World = GetWorld();
 
-	if (SwoimController.IsValid()) {
-		center = SwoimController->center;
-		//UE_LOG(LogTemp, Warning, TEXT("SwoimController is Valid"));
-	}
+	//if (SwoimController.IsValid()) {
+	//	center = SwoimController->center;
+	//	center.Z = 300;
+	//	//UE_LOG(LogTemp, Warning, TEXT("SwoimController is Valid"));
+	//}
 
 	FVector cen = seek(center);
 
@@ -62,7 +65,10 @@ void ASwoim::Tick(float DeltaTime)
 	FVector ali = align();
 	FVector coh = cohesion();
 	FVector atk = FVector(0,0,0);
-	if (targetSwoimer.IsValid()) {
+
+	//UE_LOG(LogTemp, Warning, TEXT("swoimer attacking %s"), targetSwoimer);
+
+	if (targetSwoimer != NULL) {
 		atk = attack(targetSwoimer);
 	}
 
@@ -279,7 +285,8 @@ FVector ASwoim::avoid(FHitResult& HitData) {
 	return FVector(0, 0, 0);
 }
 
-FVector ASwoim::attack(TWeakObjectPtr<ASwoim> targetSwoimer) {	
+FVector ASwoim::attack(ASwoim* targetSwoimer) {
+	UE_LOG(LogTemp, Warning, TEXT("swoimer attacking"));
 	return targetSwoimer->GetActorLocation() - GetActorLocation();
 	
 }

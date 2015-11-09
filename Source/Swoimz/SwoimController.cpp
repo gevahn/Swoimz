@@ -20,6 +20,35 @@ ASwoimController::ASwoimController()
 	WhereToSpawn = CreateDefaultSubobject<UBoxComponent>(TEXT("WhereToSpawn"));
 	RootComponent = WhereToSpawn;
 
+	// Create a camera boom (pulls in towards the player if there is a collision)
+	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
+	CameraBoom->AttachTo(RootComponent);
+	CameraBoom->TargetArmLength = 300.0f; // The camera follows at this distance behind the character	
+	CameraBoom->bUsePawnControlRotation = false; // Rotate the arm based on the controller
+
+	// Create a follow camera
+	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
+	FollowCamera->AttachTo(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
+	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
+
+	// Defaults
+	Speedlimit = 400;
+	Forcelimit = 40;
+	SepFactor = 10;
+	AliFactor = 5;
+	CohFactor = 5;
+	CenFactor = 20;
+	AtkFactor = 300;
+	AvoFactor1 = 30000000;
+	AvoFactor2 = 10;
+	SepDistance = 100;
+	AliDistance = 1500;
+	CohDistance = 15000;
+	LookAheadDistance = 30;
+	LookAheadDecay = 1.5;
+	attackRadius = 30000000;
+
+	NumberOfSwoimers = 50;
 }
 
 // Called when the game starts or when spawned
@@ -28,11 +57,11 @@ void ASwoimController::BeginPlay()
 	Super::BeginPlay();
 	
 	SwoimersArray;
-	for (int i = 0; i < 100; i++){
+	for (int i = 0; i < NumberOfSwoimers; i++){
 		SwoimersArray.Add(SpawnSwoimer());
 	}
 	print("swoimers spawned");
-	for (int i = 0; i < 100; i++){
+	for (int i = 0; i < NumberOfSwoimers; i++){
 		SwoimersArray[i]->SwoimersArray = SwoimersArray;
 		SwoimersArray[i]->center = WhereToSpawn->Bounds.Origin;
 		SwoimersArray[i]->Speedlimit = Speedlimit;
@@ -66,19 +95,25 @@ void ASwoimController::Tick( float DeltaTime )
 
 	FVector mouseLocation, mouseDirection;
 	UWorld* const World = GetWorld();
-	APlayerController* playerController = World->GetFirstPlayerController();
-	playerController->DeprojectMousePositionToWorld(mouseLocation, mouseDirection);
+	if (!Controller){
+		APlayerController* playerController = (APlayerController*)Controller;// = World->GetFirstPlayerController();
+		playerController->DeprojectMousePositionToWorld(mouseLocation, mouseDirection);
+		FVector CameraLocation;
+		FRotator CameraDirection;
+		playerController->GetPlayerViewPoint(CameraLocation, CameraDirection);
 
-
-	FVector CameraLocation;
-	FRotator CameraDirection;
-	playerController->GetPlayerViewPoint(CameraLocation, CameraDirection);
-
-	if (!mouseLocation.ContainsNaN()) {
-		float t = CameraLocation.Z / (CameraLocation - mouseLocation).Z;
-		center = (mouseLocation - CameraLocation) * t + CameraLocation;
-		center.Z = 300;
+		if (!mouseLocation.ContainsNaN()) {
+			float t = CameraLocation.Z / (CameraLocation - mouseLocation).Z;
+			center = (mouseLocation - CameraLocation) * t + CameraLocation;
+		}
+		else {
+			center = WhereToSpawn->Bounds.Origin;;
+		}
 	}
+	else {
+		center = WhereToSpawn->Bounds.Origin;;
+	}
+
 	//SetActorLocation(center);
 }
 
@@ -127,21 +162,35 @@ ASwoim* ASwoimController::SpawnSwoimer()
 }
 
 void ASwoimController::AttackSwoim() {
-	TArray<ASwoim*> targetSwoimers;
-	for (TObjectIterator<ASwoimController> itr; itr; ++itr) {
+	UE_LOG(LogTemp, Warning, TEXT("swoimers Attacking"));
+	TArray<ASwoim*> targetSwoimers;	
+	UE_LOG(LogTemp, Warning, TEXT("swoimers Attacking %d other swoimz"), targetSwoimers.Num());
+	for (TActorIterator<ASwoimController>itr(GetWorld()); itr; ++itr) {		
+		if (!itr) continue;
+		if (!itr->IsValidLowLevel()) continue;
 		float distanceToSwoim = (itr->center - center).Size();
+		if (distanceToSwoim >= 0) {
+			UE_LOG(LogTemp, Warning, TEXT("testing swoim %s"), *(itr->center).ToString());
+			UE_LOG(LogTemp, Warning, TEXT("testing swoim %s"), *(itr->GetName()));
+			UE_LOG(LogTemp, Warning, TEXT("testing swoim at %f"), distanceToSwoim);
+		}
 		if (distanceToSwoim > 0 && distanceToSwoim < attackRadius) {
 			targetSwoimers.Append(itr->SwoimersArray);
 		}
 	}
+	UE_LOG(LogTemp, Warning, TEXT("swoimers Attacking %d other swoimz"), targetSwoimers.Num());
+	if (targetSwoimers.Num() > 0) {
+		for (auto& other : SwoimersArray) {
 
-	for (auto& other : SwoimersArray) {
-		int32 indexToAttack = FMath::RandRange(0, targetSwoimers.Num());
-		other->targetSwoimer = targetSwoimers[indexToAttack];
+			int32 indexToAttack = FMath::RandRange(0, targetSwoimers.Num() - 1);
+			UE_LOG(LogTemp, Warning, TEXT("swoimers Attacking swoimer at %d"), indexToAttack);
+			other->targetSwoimer = targetSwoimers[indexToAttack];
+		}
 	}
 }
 
 void ASwoimController::Disengage() {
+	UE_LOG(LogTemp, Warning, TEXT("swoimers Disengaging"));
 	for (auto& other : SwoimersArray) {		
 		other->targetSwoimer = NULL;
 	}
