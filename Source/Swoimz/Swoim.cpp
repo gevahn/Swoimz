@@ -53,11 +53,11 @@ void ASwoim::Tick(float DeltaTime)
 
 	UWorld* const World = GetWorld();
 
-	//if (SwoimController.IsValid()) {
-	//	center = SwoimController->center;
-	//	center.Z = 300;
+	if (SwoimController.IsValid()) {
+		center = SwoimController->center;
+		center.Z = 300;
 	//	//UE_LOG(LogTemp, Warning, TEXT("SwoimController is Valid"));
-	//}
+	}
 
 	FVector cen = seek(center);
 
@@ -286,7 +286,7 @@ FVector ASwoim::avoid(FHitResult& HitData) {
 }
 
 FVector ASwoim::attack(ASwoim* targetSwoimer) {
-	UE_LOG(LogTemp, Warning, TEXT("swoimer attacking"));
+	//UE_LOG(LogTemp, Warning, TEXT("swoimer attacking"));
 	return targetSwoimer->GetActorLocation() - GetActorLocation();
 	
 }

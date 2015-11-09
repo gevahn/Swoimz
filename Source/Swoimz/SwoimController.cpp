@@ -95,7 +95,11 @@ void ASwoimController::Tick( float DeltaTime )
 
 	FVector mouseLocation, mouseDirection;
 	UWorld* const World = GetWorld();
-	if (!Controller){
+	//UE_LOG(LogTemp, Warning, TEXT("swoim is controlled by %s"), *Controller->GetStateName().ToString());
+	if (Controller->IsLocalPlayerController()){
+		//UE_LOG(LogTemp, Warning, TEXT("testing swoim %s"), *(center).ToString());
+		//UE_LOG(LogTemp, Warning, TEXT("swoim is controlled by %s"), *Controller->GetStateName().ToString());
+		//UE_LOG(LogTemp, Warning, TEXT("swoim is controlled"));
 		APlayerController* playerController = (APlayerController*)Controller;// = World->GetFirstPlayerController();
 		playerController->DeprojectMousePositionToWorld(mouseLocation, mouseDirection);
 		FVector CameraLocation;
@@ -183,7 +187,7 @@ void ASwoimController::AttackSwoim() {
 		for (auto& other : SwoimersArray) {
 
 			int32 indexToAttack = FMath::RandRange(0, targetSwoimers.Num() - 1);
-			UE_LOG(LogTemp, Warning, TEXT("swoimers Attacking swoimer at %d"), indexToAttack);
+			//UE_LOG(LogTemp, Warning, TEXT("swoimers Attacking swoimer at %d"), indexToAttack);
 			other->targetSwoimer = targetSwoimers[indexToAttack];
 		}
 	}
