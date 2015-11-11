@@ -19,6 +19,9 @@ ASwoim::ASwoim()
 	acceleration = FVector(0, 0, 0);
 	avoidAhead = FVector(0, 0, 0);
 
+	CurrentHealth = 100;
+	MaxHealth = 100;
+
 
 	mass = 1;
 
@@ -44,6 +47,8 @@ void ASwoim::BeginPlay()
 void ASwoim::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if (CurrentHealth < 0) return;
 
 	acceleration = FVector(0, 0, 0);
 
@@ -142,8 +147,16 @@ void ASwoim::Tick(float DeltaTime)
 void ASwoim::NotifyActorBeginOverlap(AActor* otherActor) {
 	ASwoim* testSwoimer = Cast<ASwoim>(otherActor);
 	if (testSwoimer && !testSwoimer->IsPendingKill()) {
-		UE_LOG(LogTemp, Warning, TEXT("swoimer overlapping %s"), *(otherActor->GetName()));
-		SparkOnOverlap();
+		if (SwoimController != testSwoimer->SwoimController){
+			UE_LOG(LogTemp, Warning, TEXT("swoimer overlapping %s"), *(otherActor->GetName()));
+			testSwoimer->CurrentHealth = testSwoimer->CurrentHealth - 30;
+			if (testSwoimer->CurrentHealth < 0) {
+				testSwoimer->PrimaryActorTick.bCanEverTick = false;
+				testSwoimer->GetMesh()->SetSimulatePhysics(true);
+				UE_LOG(LogTemp, Warning, TEXT("swoimer %s died"), *(otherActor->GetName()));
+			}
+			SparkOnOverlap();
+		}
 	}
 }
 

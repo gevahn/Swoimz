@@ -26,6 +26,9 @@ public:
 
 	float maxspeed;
 
+	int32 CurrentHealth;
+	int32 MaxHealth;
+
 
 	float Speedlimit;
 
