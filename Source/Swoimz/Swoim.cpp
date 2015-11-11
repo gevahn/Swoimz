@@ -56,7 +56,7 @@ void ASwoim::Tick(float DeltaTime)
 	if (SwoimController.IsValid()) {
 		center = SwoimController->center;
 		center.Z = 300;
-	//	//UE_LOG(LogTemp, Warning, TEXT("SwoimController is Valid"));
+		//UE_LOG(LogTemp, Warning, TEXT("SwoimController is Valid"));
 	}
 
 	FVector cen = seek(center);
@@ -137,6 +137,18 @@ void ASwoim::Tick(float DeltaTime)
 	SetActorRotation(velocity.Rotation() + FRotator(-90, 0, 0));
 
 
+}
+
+void ASwoim::NotifyActorBeginOverlap(AActor* otherActor) {
+	ASwoim* testSwoimer = Cast<ASwoim>(otherActor);
+	if (testSwoimer && !testSwoimer->IsPendingKill()) {
+		UE_LOG(LogTemp, Warning, TEXT("swoimer overlapping %s"), *(otherActor->GetName()));
+		SparkOnOverlap();
+	}
+}
+
+void ASwoim::SparkOnOverlap_Implementation(){
+	UE_LOG(LogTemp, Warning, TEXT("spark!"));
 }
 
 FVector ASwoim::separate()

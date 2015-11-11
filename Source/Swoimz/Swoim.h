@@ -60,6 +60,13 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaSeconds) override;
 
+	virtual void NotifyActorBeginOverlap(AActor* otherActor) override;
+
+	UFUNCTION(BlueprintNativeEvent)
+	void SparkOnOverlap();
+	virtual void SparkOnOverlap_Implementation();
+
+
 	TArray<ASwoim*> SwoimersArray;
 
 	UFUNCTION()
