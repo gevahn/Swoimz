@@ -84,6 +84,13 @@ public:
 
 	void Disengage();
 
+	void Disperse();
+
+	void ReturnToFlock();
+
+	void ZoomCamera(float AxisValue);
+	
+
 protected:
 	// the pickup to spawn
 	UPROPERTY(EditAnywhere, Category = "Spawing")

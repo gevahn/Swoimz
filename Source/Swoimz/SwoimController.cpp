@@ -24,6 +24,7 @@ ASwoimController::ASwoimController()
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->AttachTo(RootComponent);
 	CameraBoom->TargetArmLength = 300.0f; // The camera follows at this distance behind the character	
+	CameraBoom->AddLocalOffset(FVector(-1, 0, 2));
 	CameraBoom->bUsePawnControlRotation = false; // Rotate the arm based on the controller
 
 	// Create a follow camera
@@ -135,8 +136,16 @@ void ASwoimController::SetupPlayerInputComponent(class UInputComponent* InputCom
 {
 	Super::SetupPlayerInputComponent(InputComponent);
 
+	// Attack and Disengage
 	InputComponent->BindAction("Attack", IE_Pressed, this, &ASwoimController::AttackSwoim);
 	InputComponent->BindAction("Disengage", IE_Released, this, &ASwoimController::Disengage);
+
+	// Disperse and return
+	InputComponent->BindAction("Disperse", IE_Pressed, this, &ASwoimController::Disperse);
+	InputComponent->BindAction("ReturnToFlock", IE_Released, this, &ASwoimController::ReturnToFlock);
+
+	// Camera Zoom
+	InputComponent->BindAxis("Zoom", this, &ASwoimController::ZoomCamera);
 
 }
 
@@ -199,3 +208,26 @@ void ASwoimController::Disengage() {
 		other->targetSwoimer = NULL;
 	}
 }
+
+void ASwoimController::Disperse() {
+	UE_LOG(LogTemp, Warning, TEXT("swoimers Disperseing"));
+	for (auto& swoimer : SwoimersArray) {
+		swoimer->CohFactor = swoimer->CohFactor * -10;
+		swoimer->CenFactor = 0;
+	}
+}
+
+void ASwoimController::ReturnToFlock() {
+	UE_LOG(LogTemp, Warning, TEXT("swoimers returning"));
+	for (auto& swoimer : SwoimersArray) {
+		swoimer->CohFactor = swoimer->CohFactor * -0.1;
+		swoimer->CenFactor = CenFactor;
+	}
+}
+
+
+void ASwoimController::ZoomCamera(float AxisValue) {
+
+	CameraBoom->TargetArmLength = CameraBoom->TargetArmLength + AxisValue;
+}
+
