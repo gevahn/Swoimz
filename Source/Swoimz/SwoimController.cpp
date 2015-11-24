@@ -112,11 +112,11 @@ void ASwoimController::Tick( float DeltaTime )
 			center = (mouseLocation - CameraLocation) * t + CameraLocation;
 		}
 		else {
-			center = WhereToSpawn->Bounds.Origin;;
+			center = WhereToSpawn->Bounds.Origin;
 		}
 	}
 	else {
-		center = WhereToSpawn->Bounds.Origin;;
+		center = WhereToSpawn->Bounds.Origin;
 	}
 
 	//SetActorLocation(center);

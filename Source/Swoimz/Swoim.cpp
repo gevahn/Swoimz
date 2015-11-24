@@ -64,12 +64,12 @@ void ASwoim::Tick(float DeltaTime)
 		//UE_LOG(LogTemp, Warning, TEXT("SwoimController is Valid"));
 	}
 
-	FVector cen = seek(center);
+	FVector cen = seek(center); //Track mouse
 
-	FVector sep = separate();
-	FVector ali = align();
-	FVector coh = cohesion();
-	FVector atk = FVector(0,0,0);
+	FVector sep = separate(); //Move away from other swoimers
+	FVector ali = align(); // aligin with other swoimers
+	FVector coh = cohesion(); // move towards the CM of the swoim
+	FVector atk = FVector(0,0,0); // move toward target
 
 	//UE_LOG(LogTemp, Warning, TEXT("swoimer attacking %s"), targetSwoimer);
 
@@ -82,15 +82,17 @@ void ASwoim::Tick(float DeltaTime)
 	FHitResult HitData(ForceInit);
 
 	
-	if (TraceAhead(NewLocation, NewLocation + LookAheadDistance * DeltaTime * velocity, World, HitData)) {
-		FVector ImpactNormalVec = HitData.ImpactNormal;
-				
-		FVector DirectionToAvoidImpact = ImpactNormalVec - velocity.GetSafeNormal() * FVector::DotProduct(ImpactNormalVec, velocity.GetSafeNormal());
-		avoidAhead = DirectionToAvoidImpact / (HitData.Distance - 20);		
-		//UE_LOG(LogTemp, Warning, TEXT("mesh ahead, avoid at dir X %f"), avoid.X);
-		//UE_LOG(LogTemp, Warning, TEXT("mesh ahead, avoid at dir Y %f"), avoid.Y);
-		//UE_LOG(LogTemp, Warning, TEXT("mesh ahead, avoid at dir Z %f"), avoid.Z);
-		//UE_LOG(LogTemp, Warning, TEXT("mesh ahead, distance %f"), HitData.Distance);
+	if (TraceAhead(NewLocation, NewLocation + LookAheadDistance * DeltaTime * velocity, World, HitData)) {		
+		if (!HitData.GetActor()->GetClass()->IsChildOf(ASwoim::StaticClass())) {
+			FVector ImpactNormalVec = HitData.ImpactNormal;
+
+			FVector DirectionToAvoidImpact = ImpactNormalVec - velocity.GetSafeNormal() * FVector::DotProduct(ImpactNormalVec, velocity.GetSafeNormal());
+			avoidAhead = DirectionToAvoidImpact / (HitData.Distance - 20);
+			//UE_LOG(LogTemp, Warning, TEXT("mesh ahead, avoid at dir X %f"), avoid.X);
+			//UE_LOG(LogTemp, Warning, TEXT("mesh ahead, avoid at dir Y %f"), avoid.Y);
+			//UE_LOG(LogTemp, Warning, TEXT("mesh ahead, avoid at dir Z %f"), avoid.Z);
+			//UE_LOG(LogTemp, Warning, TEXT("mesh ahead, distance %f"), HitData.Distance);
+		}
 
 	}
 
