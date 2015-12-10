@@ -83,6 +83,7 @@ void ASwoimController::BeginPlay()
 
 	}
 	UE_LOG(LogTemp, Warning, TEXT("swoimers updated"));
+	center = WhereToSpawn->Bounds.Origin;
 
 	
 
@@ -111,15 +112,29 @@ void ASwoimController::Tick( float DeltaTime )
 			float t = CameraLocation.Z / (CameraLocation - mouseLocation).Z;
 			center = (mouseLocation - CameraLocation) * t + CameraLocation;
 		}
-		else {
-			center = WhereToSpawn->Bounds.Origin;
+
+	}
+	FVector swoimCM = FVector(0, 0, 0);
+	
+	for (auto& other : SwoimersArray)
+	{
+		if (other->IsValidLowLevel()){
+			float d = FVector::Dist(GetActorLocation(), other->GetActorLocation());
+			if ((d > 0) && (d < CohDistance))
+			{
+
+				swoimCM += other->GetActorLocation();
+
+			}
 		}
 	}
-	else {
-		center = WhereToSpawn->Bounds.Origin;
-	}
+	swoimCM = swoimCM / (SwoimersArray.Num() - 1);
 
-	//SetActorLocation(center);
+	swoimCM.Z = 300;
+	
+	SetActorLocation(swoimCM);
+
+
 }
 
 FVector ASwoimController::GetRandomPointInVolume()

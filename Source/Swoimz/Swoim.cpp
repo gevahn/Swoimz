@@ -177,11 +177,12 @@ FVector ASwoim::separate()
 
 	for (auto& other : SwoimersArray)
 	{
-
-		float d = FVector::Dist(GetActorLocation(), other->GetActorLocation());
-		if ((d > 0) && (d < SepDistance))
-		{
-			steer = steer - (other->GetActorLocation() - GetActorLocation());
+		if (other->IsValidLowLevel()){
+			float d = FVector::Dist(GetActorLocation(), other->GetActorLocation());
+			if ((d > 0) && (d < SepDistance))
+			{
+				steer = steer - (other->GetActorLocation() - GetActorLocation());
+			}
 		}
 	}
 	/*if (steer.Size() > 0) {
@@ -205,13 +206,14 @@ FVector ASwoim::align()
 
 	for (auto& other : SwoimersArray)
 	{
+		if (other->IsValidLowLevel()){
+			float d = FVector::Dist(GetActorLocation(), other->GetActorLocation());
+			if ((d > 0) && (d < AliDistance))
+			{
 
-		float d = FVector::Dist(GetActorLocation(), other->GetActorLocation());
-		if ((d > 0) && (d < AliDistance))
-		{
+				steer += other->velocity;
 
-			steer += other->velocity;
-
+			}
 		}
 	}
 	steer = steer / (SwoimersArray.Num() - 1);
@@ -235,13 +237,14 @@ FVector ASwoim::cohesion()
 
 	for (auto& other : SwoimersArray)
 	{
+		if (other->IsValidLowLevel()){
+			float d = FVector::Dist(GetActorLocation(), other->GetActorLocation());
+			if ((d > 0) && (d < CohDistance))
+			{
 
-		float d = FVector::Dist(GetActorLocation(), other->GetActorLocation());
-		if ((d > 0) && (d < CohDistance))
-		{
+				steer += other->GetActorLocation();
 
-			steer += other->GetActorLocation();
-
+			}
 		}
 	}
 	steer = steer / (SwoimersArray.Num() - 1);
