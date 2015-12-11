@@ -89,6 +89,24 @@ public:
 	void ReturnToFlock();
 
 	void ZoomCamera(float AxisValue);
+
+	void IncreaseCohFactor();
+	void DecreaseCohFactor();
+
+	void IncreaseSepFactor();
+	void DecreaseSepFactor();
+
+	void IncreaseAliFactor();
+	void DecreaseAliFactor();
+
+	void IncreaseCohDistance();
+	void DecreaseCohDistance();
+
+	void IncreaseSepDistance();
+	void DecreaseSepDistance();
+
+	void IncreaseAliDistance();
+	void DecreaseAliDistance();
 	
 
 protected:

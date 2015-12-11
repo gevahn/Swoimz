@@ -162,6 +162,43 @@ void ASwoimController::SetupPlayerInputComponent(class UInputComponent* InputCom
 	// Camera Zoom
 	InputComponent->BindAxis("Zoom", this, &ASwoimController::ZoomCamera);
 
+	// Increase Coh Factor
+	InputComponent->BindAction("Increase Coh Factor", IE_Repeat, this, &ASwoimController::IncreaseCohFactor);
+
+	// Decrease Coh Factor
+	InputComponent->BindAction("Decrease Coh Factor", IE_Repeat, this, &ASwoimController::DecreaseCohFactor);
+
+	// Increase Sep Factor
+	InputComponent->BindAction("Increase Sep Factor", IE_Repeat, this, &ASwoimController::IncreaseSepFactor);
+
+	// Decrease Sep Factor
+	InputComponent->BindAction("Decrease Sep Factor", IE_Repeat, this, &ASwoimController::DecreaseSepFactor);
+
+	// Increase Ali Factor
+	InputComponent->BindAction("Increase Ali Factor", IE_Repeat, this, &ASwoimController::IncreaseAliFactor);
+
+	// Decrease Ali Factor
+	InputComponent->BindAction("Decrease Ali Factor", IE_Repeat, this, &ASwoimController::DecreaseAliFactor);
+
+	// Increase Coh Distance
+	InputComponent->BindAction("Increase Coh Distance", IE_Repeat, this, &ASwoimController::IncreaseCohDistance);
+
+	// Decrease Coh Distance
+	InputComponent->BindAction("Decrease Coh Distance", IE_Repeat, this, &ASwoimController::DecreaseCohDistance);
+
+	// Increase Sep Distance
+	InputComponent->BindAction("Increase Sep Distance", IE_Repeat, this, &ASwoimController::IncreaseSepDistance);
+
+	// Decrease Sep Distance
+	InputComponent->BindAction("Decrease Sep Distance", IE_Repeat, this, &ASwoimController::DecreaseSepDistance);
+
+	// Increase Ali Distance
+	InputComponent->BindAction("Increase Ali Distance", IE_Repeat, this, &ASwoimController::IncreaseAliDistance);
+
+	// Decrease Ali Distance
+	InputComponent->BindAction("Decrease Ali Distance", IE_Repeat, this, &ASwoimController::DecreaseAliDistance);
+
+
 }
 
 
@@ -246,3 +283,92 @@ void ASwoimController::ZoomCamera(float AxisValue) {
 	CameraBoom->TargetArmLength = CameraBoom->TargetArmLength + AxisValue;
 }
 
+void ASwoimController::IncreaseCohFactor() {
+	UE_LOG(LogTemp, Warning, TEXT("CohFactor %f"), CohFactor);
+	CohFactor += 0.5;
+	for (auto& swoimer : SwoimersArray) {
+		swoimer->CohFactor = CohFactor;		
+	}
+}
+void ASwoimController::DecreaseCohFactor() {
+	UE_LOG(LogTemp, Warning, TEXT("CohFactor %f"), CohFactor);
+	CohFactor -= 0.5;
+	for (auto& swoimer : SwoimersArray) {
+		swoimer->CohFactor = CohFactor;
+	}
+}
+
+void ASwoimController::IncreaseSepFactor() {
+	UE_LOG(LogTemp, Warning, TEXT("CohFactor %f"), SepFactor);
+	SepFactor += 0.5;
+	for (auto& swoimer : SwoimersArray) {
+		swoimer->SepFactor = SepFactor;
+	}
+}
+void ASwoimController::DecreaseSepFactor() {
+	UE_LOG(LogTemp, Warning, TEXT("CohFactor %f"), SepFactor);
+	SepFactor -= 0.5;
+	for (auto& swoimer : SwoimersArray) {
+		swoimer->SepFactor = SepFactor;
+	}
+}
+
+void ASwoimController::IncreaseAliFactor() {
+	UE_LOG(LogTemp, Warning, TEXT("CohFactor %f"), AliFactor);
+	AliFactor += 0.5;
+	for (auto& swoimer : SwoimersArray) {
+		swoimer->AliFactor = AliFactor;
+	}
+}
+void ASwoimController::DecreaseAliFactor() {
+	UE_LOG(LogTemp, Warning, TEXT("CohFactor %f"), AliFactor);
+	AliFactor -= 0.5;
+	for (auto& swoimer : SwoimersArray) {
+		swoimer->AliFactor = AliFactor;
+	}
+}
+
+void ASwoimController::IncreaseCohDistance() {
+	UE_LOG(LogTemp, Warning, TEXT("CohFactor %f"), CohDistance);
+	CohDistance += 10;
+	for (auto& swoimer : SwoimersArray) {
+		swoimer->CohDistance = CohDistance;
+	}
+}
+void ASwoimController::DecreaseCohDistance() {
+	UE_LOG(LogTemp, Warning, TEXT("CohFactor %f"), CohDistance);
+	CohDistance -= 10;
+	for (auto& swoimer : SwoimersArray) {
+		swoimer->CohDistance = CohDistance;
+	}
+}
+
+void ASwoimController::IncreaseSepDistance() {
+	UE_LOG(LogTemp, Warning, TEXT("CohFactor %f"), SepDistance);
+	SepDistance += 10;
+	for (auto& swoimer : SwoimersArray) {
+		swoimer->SepDistance = SepDistance;
+	}
+}
+void ASwoimController::DecreaseSepDistance() {
+	UE_LOG(LogTemp, Warning, TEXT("CohFactor %f"), SepDistance);
+	SepDistance -= 10;
+	for (auto& swoimer : SwoimersArray) {
+		swoimer->SepDistance = SepDistance;
+	}
+}
+
+void ASwoimController::IncreaseAliDistance() {
+	UE_LOG(LogTemp, Warning, TEXT("CohFactor %f"), AliDistance);
+	AliDistance += 10;
+	for (auto& swoimer : SwoimersArray) {
+		swoimer->AliDistance = AliDistance;
+	}
+}
+void ASwoimController::DecreaseAliDistance() {
+	UE_LOG(LogTemp, Warning, TEXT("CohFactor %f"), AliDistance);
+	AliDistance -= 10;
+	for (auto& swoimer : SwoimersArray) {
+		swoimer->AliDistance = AliDistance;
+	}
+}
