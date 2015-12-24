@@ -299,14 +299,14 @@ void ASwoimController::DecreaseCohFactor() {
 }
 
 void ASwoimController::IncreaseSepFactor() {
-	UE_LOG(LogTemp, Warning, TEXT("CohFactor %f"), SepFactor);
+	UE_LOG(LogTemp, Warning, TEXT("SepFactor %f"), SepFactor);
 	SepFactor += 0.5;
 	for (auto& swoimer : SwoimersArray) {
 		swoimer->SepFactor = SepFactor;
 	}
 }
 void ASwoimController::DecreaseSepFactor() {
-	UE_LOG(LogTemp, Warning, TEXT("CohFactor %f"), SepFactor);
+	UE_LOG(LogTemp, Warning, TEXT("SepFactor %f"), SepFactor);
 	SepFactor -= 0.5;
 	for (auto& swoimer : SwoimersArray) {
 		swoimer->SepFactor = SepFactor;
@@ -314,14 +314,14 @@ void ASwoimController::DecreaseSepFactor() {
 }
 
 void ASwoimController::IncreaseAliFactor() {
-	UE_LOG(LogTemp, Warning, TEXT("CohFactor %f"), AliFactor);
+	UE_LOG(LogTemp, Warning, TEXT("AliFactor %f"), AliFactor);
 	AliFactor += 0.5;
 	for (auto& swoimer : SwoimersArray) {
 		swoimer->AliFactor = AliFactor;
 	}
 }
 void ASwoimController::DecreaseAliFactor() {
-	UE_LOG(LogTemp, Warning, TEXT("CohFactor %f"), AliFactor);
+	UE_LOG(LogTemp, Warning, TEXT("AliFactor %f"), AliFactor);
 	AliFactor -= 0.5;
 	for (auto& swoimer : SwoimersArray) {
 		swoimer->AliFactor = AliFactor;
@@ -329,14 +329,14 @@ void ASwoimController::DecreaseAliFactor() {
 }
 
 void ASwoimController::IncreaseCohDistance() {
-	UE_LOG(LogTemp, Warning, TEXT("CohFactor %f"), CohDistance);
+	UE_LOG(LogTemp, Warning, TEXT("CohDistance %f"), CohDistance);
 	CohDistance += 10;
 	for (auto& swoimer : SwoimersArray) {
 		swoimer->CohDistance = CohDistance;
 	}
 }
 void ASwoimController::DecreaseCohDistance() {
-	UE_LOG(LogTemp, Warning, TEXT("CohFactor %f"), CohDistance);
+	UE_LOG(LogTemp, Warning, TEXT("CohDistance %f"), CohDistance);
 	CohDistance -= 10;
 	for (auto& swoimer : SwoimersArray) {
 		swoimer->CohDistance = CohDistance;
@@ -344,14 +344,14 @@ void ASwoimController::DecreaseCohDistance() {
 }
 
 void ASwoimController::IncreaseSepDistance() {
-	UE_LOG(LogTemp, Warning, TEXT("CohFactor %f"), SepDistance);
+	UE_LOG(LogTemp, Warning, TEXT("SepDistance %f"), SepDistance);
 	SepDistance += 10;
 	for (auto& swoimer : SwoimersArray) {
 		swoimer->SepDistance = SepDistance;
 	}
 }
 void ASwoimController::DecreaseSepDistance() {
-	UE_LOG(LogTemp, Warning, TEXT("CohFactor %f"), SepDistance);
+	UE_LOG(LogTemp, Warning, TEXT("SepDistance %f"), SepDistance);
 	SepDistance -= 10;
 	for (auto& swoimer : SwoimersArray) {
 		swoimer->SepDistance = SepDistance;
@@ -359,14 +359,14 @@ void ASwoimController::DecreaseSepDistance() {
 }
 
 void ASwoimController::IncreaseAliDistance() {
-	UE_LOG(LogTemp, Warning, TEXT("CohFactor %f"), AliDistance);
+	UE_LOG(LogTemp, Warning, TEXT("AliDistance %f"), AliDistance);
 	AliDistance += 10;
 	for (auto& swoimer : SwoimersArray) {
 		swoimer->AliDistance = AliDistance;
 	}
 }
 void ASwoimController::DecreaseAliDistance() {
-	UE_LOG(LogTemp, Warning, TEXT("CohFactor %f"), AliDistance);
+	UE_LOG(LogTemp, Warning, TEXT("AliDistance %f"), AliDistance);
 	AliDistance -= 10;
 	for (auto& swoimer : SwoimersArray) {
 		swoimer->AliDistance = AliDistance;
