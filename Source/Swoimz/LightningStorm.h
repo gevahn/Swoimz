@@ -22,13 +22,18 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	void Fire(class ASwoim* first, class ASwoim* second);
+	UParticleSystemComponent * Fire(class ASwoim* first, class ASwoim* second);
 
 	UPROPERTY(EditAnywhere)
 	float Damage;
 
 	UPROPERTY(EditAnywhere)
 	float ArcDistance;
+
+	UPROPERTY(EditAnywhere)
+		float NumOfLights;
+
+	TArray<UParticleSystemComponent *> LightiningsArray;
 
 private:
 	//box componenet to spawn in

@@ -10,6 +10,7 @@ ALightningStorm::ALightningStorm()
 {
 	Damage = 5;
 	ArcDistance = 100;
+	NumOfLights = 10;
 
 	PrimaryActorTick.bCanEverTick = true;
 	PrimaryActorTick.bStartWithTickEnabled = true;
@@ -34,21 +35,50 @@ void ALightningStorm::Tick(float DeltaTime)
 
 	int FireCounter = 0;
 
+
+	TArray<ASwoim*> HitSwoimers;
 	for (auto& first : OverlappingActors) {
 		for (auto& second : OverlappingActors) {
 			float d = FVector::Dist(first->GetActorLocation(), second->GetActorLocation());
-			if (d > 0 && d < ArcDistance && FireCounter < 10)
+			if (d > 0 && d < ArcDistance)
 			{
-				FireCounter++;
-				Fire(Cast<ASwoim>(first), Cast<ASwoim>(second));
+				HitSwoimers.Add(Cast<ASwoim>(second));
 			}
-
 		}
 	}
 
+	if (HitSwoimers.Num() > 1) {
+		int32 CurInt = FMath::RandRange(0, HitSwoimers.Num() - 1);
+		int32 NextInt = FMath::RandRange(0, HitSwoimers.Num() - 1);
+		for (int i = LightiningsArray.Num(); i < NumOfLights; i++) {
+			LightiningsArray.Add(Fire(HitSwoimers[CurInt], HitSwoimers[NextInt]));
+			CurInt = NextInt;
+			NextInt = FMath::RandRange(0, HitSwoimers.Num() - 1);
+
+		}
+	}
+	
+		
+	
+
+	UE_LOG(LogTemp, Warning, TEXT("LightiningsArray %d"), LightiningsArray.Num());
+
+	bool IsCompeleted = true;
+	for (auto& Lightining : LightiningsArray) {
+		if (!Lightining->HasCompleted())
+		{
+			IsCompeleted = false;
+		}
+	}
+	if (IsCompeleted)
+	{
+		LightiningsArray.Empty();
+	}
+
+
 }
 
-void ALightningStorm::Fire(ASwoim* first, ASwoim* second)
+UParticleSystemComponent * ALightningStorm::Fire(ASwoim* first, ASwoim* second)
 {
 	if (LightiningParticle != NULL)
 	{
@@ -56,8 +86,10 @@ void ALightningStorm::Fire(ASwoim* first, ASwoim* second)
 		if (World)
 		{
 			//LightiningParticle->Get
-			UParticleSystemComponent * FiredLightning = UGameplayStatics::SpawnEmitterAtLocation(World,	LightiningParticle, first->GetActorLocation());
-			FiredLightning->SetBeamTargetPoint(0, second->GetActorLocation(), 0);
+			UParticleSystemComponent * FiredLightning = UGameplayStatics::SpawnEmitterAttached(LightiningParticle, first->GetMesh());
+			FiredLightning->SetActorParameter("Target", second);
+			return FiredLightning;
 		}
 	}
+	return nullptr;
 }
