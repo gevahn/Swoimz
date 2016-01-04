@@ -2,6 +2,7 @@
 
 #include "Swoimz.h"
 #include "Swoim.h"
+#include "SwoimController.h"
 
 #define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White,text)
 
@@ -18,12 +19,17 @@ ASwoim::ASwoim()
 	acceleration = FVector(0, 0, 0);
 	avoidAhead = FVector(0, 0, 0);
 
+	CurrentHealth = 100;
+	MaxHealth = 100;
+
 
 	mass = 1;
 
 	// Create mesh
 	SwarmerMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("SwarmerMesh"));
 	RootComponent = SwarmerMesh;
+
+	targetSwoimer = NULL;
 
 
 
@@ -42,71 +48,51 @@ void ASwoim::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (CurrentHealth < 0) return;
+
 	acceleration = FVector(0, 0, 0);
 
 	FVector NewLocation = GetActorLocation();
 	FVector HitLocation;
-	//UPrimitiveComponent ** PrimitiveHit;
 
-
-
-	//ActorGetDistanceToCollision(GetActorLocation(), ECollisionChannel::ECC_WorldStatic, HitLocation, PrimitiveHit);
-
-	/*FVector2D MousePosition;
 
 	UWorld* const World = GetWorld();
-	const ULocalPlayer* LocalPlayer;
-	if (World) {
-		LocalPlayer = World->GetFirstLocalPlayerFromController();
-		if (LocalPlayer && LocalPlayer->ViewportClient)
-		{
-			MousePosition = LocalPlayer->ViewportClient->GetMousePosition();
-		}
-	}*/
 
-	UWorld* const World = GetWorld();
-	FVector mouseLocation, mouseDirection;
-	APlayerController* playerController = World ->GetFirstPlayerController();
-	playerController->DeprojectMousePositionToWorld(mouseLocation, mouseDirection);
-
-
-	/*
-	UE_LOG(LogTemp, Warning, TEXT("Mouse pos X %f"), MousePosition.X);
-	UE_LOG(LogTemp, Warning, TEXT("Mouse pos Y %f"), MousePosition.Y);*/
-	
-	
-	
-	FVector sep = separate();
-	FVector ali = align();
-	FVector coh = cohesion();
-
-	FVector CameraLocation;
-	FRotator CameraDirection;
-	playerController->GetPlayerViewPoint(CameraLocation, CameraDirection);
-		
-	
-	
-	if (!mouseLocation.ContainsNaN()) {
-		float t = CameraLocation.Z / (CameraLocation - mouseLocation).Z;
-		center = (mouseLocation - CameraLocation) * t + CameraLocation;
+	if (SwoimController.IsValid()) {
+		center = SwoimController->center;
 		center.Z = 300;
+		//UE_LOG(LogTemp, Warning, TEXT("SwoimController is Valid"));
 	}
 
-	
-	FVector cen = seek(center);
+	FVector cen = seek(center); //Track mouse
+
+	FVector sep = separate(); //Move away from other swoimers
+	FVector ali = align(); // aligin with other swoimers
+	FVector coh = cohesion(); // move towards the CM of the swoim
+	FVector atk = FVector(0,0,0); // move toward target
+
+	//UE_LOG(LogTemp, Warning, TEXT("swoimer attacking %s"), targetSwoimer);
+
+	if (targetSwoimer != NULL) {
+		atk = attack(targetSwoimer);
+	}
+
+
 
 	FHitResult HitData(ForceInit);
 
 	
-	if (TraceAhead(NewLocation, NewLocation + LookAheadDistance * DeltaTime * velocity, World, HitData)) {
-		FVector ImpactNormalVec = HitData.ImpactNormal;
-				
-		FVector DirectionToAvoidImpact = ImpactNormalVec - velocity.GetSafeNormal() * FVector::DotProduct(ImpactNormalVec, velocity.GetSafeNormal());
-		avoidAhead = DirectionToAvoidImpact / (HitData.Distance - 20);		
-		//UE_LOG(LogTemp, Warning, TEXT("mesh ahead, avoid at dir X %f"), avoid.X);
-		//UE_LOG(LogTemp, Warning, TEXT("mesh ahead, avoid at dir Y %f"), avoid.Y);
-		//UE_LOG(LogTemp, Warning, TEXT("mesh ahead, avoid at dir Z %f"), avoid.Z);
-		//UE_LOG(LogTemp, Warning, TEXT("mesh ahead, distance %f"), HitData.Distance);
+	if (TraceAhead(NewLocation, NewLocation + LookAheadDistance * DeltaTime * velocity, World, HitData)) {		
+		if (!HitData.GetActor()->GetClass()->IsChildOf(ASwoim::StaticClass())) {
+			FVector ImpactNormalVec = HitData.ImpactNormal;
+
+			FVector DirectionToAvoidImpact = ImpactNormalVec - velocity.GetSafeNormal() * FVector::DotProduct(ImpactNormalVec, velocity.GetSafeNormal());
+			avoidAhead = DirectionToAvoidImpact / (HitData.Distance - 20);
+			//UE_LOG(LogTemp, Warning, TEXT("mesh ahead, avoid at dir X %f"), avoid.X);
+			//UE_LOG(LogTemp, Warning, TEXT("mesh ahead, avoid at dir Y %f"), avoid.Y);
+			//UE_LOG(LogTemp, Warning, TEXT("mesh ahead, avoid at dir Z %f"), avoid.Z);
+			//UE_LOG(LogTemp, Warning, TEXT("mesh ahead, distance %f"), HitData.Distance);
+		}
 
 	}
 
@@ -122,9 +108,10 @@ void ASwoim::Tick(float DeltaTime)
 	ali = ali * AliFactor;
 	coh = coh * CohFactor;
 	cen = cen * CenFactor;
+	atk = atk * AtkFactor;
 	FVector avoid = (avoidAhead)* AvoFactor1 + avoidClosest * AvoFactor2;
 
-	acceleration = sep + ali + coh + cen + avoid;
+	acceleration = sep + ali + coh + cen + avoid + atk;
 
 	avoidAhead = avoidAhead / LookAheadDecay;
 
@@ -159,6 +146,29 @@ void ASwoim::Tick(float DeltaTime)
 
 }
 
+void ASwoim::NotifyActorBeginOverlap(AActor* otherActor) {
+	ASwoim* testSwoimer = Cast<ASwoim>(otherActor);
+	if (testSwoimer && !testSwoimer->IsPendingKill()) {
+		if (SwoimController != testSwoimer->SwoimController){
+			//UE_LOG(LogTemp, Warning, TEXT("swoimer overlapping %s"), *(otherActor->GetName()));
+			testSwoimer->CurrentHealth = testSwoimer->CurrentHealth - SwoimersArray.Num();
+			if (testSwoimer->CurrentHealth < 0) {
+				testSwoimer->PrimaryActorTick.bCanEverTick = false;
+				testSwoimer->GetMesh()->SetSimulatePhysics(true);
+				testSwoimer->SwoimersArray.Remove(testSwoimer);
+				testSwoimer->SwoimController->SwoimersArray.Remove(testSwoimer);
+				testSwoimer->SwoimController->NumberOfSwoimers -= 1;
+				UE_LOG(LogTemp, Warning, TEXT("swoimer %s died"), *(otherActor->GetName()));
+			}
+			SparkOnOverlap();
+		}
+	}
+}
+
+void ASwoim::SparkOnOverlap_Implementation(){
+	UE_LOG(LogTemp, Warning, TEXT("spark!"));
+}
+
 FVector ASwoim::separate()
 {
 
@@ -168,11 +178,12 @@ FVector ASwoim::separate()
 
 	for (auto& other : SwoimersArray)
 	{
-
-		float d = FVector::Dist(GetActorLocation(), other->GetActorLocation());
-		if ((d > 0) && (d < SepDistance))
-		{
-			steer = steer - (other->GetActorLocation() - GetActorLocation());
+		if (other->IsValidLowLevel()){
+			float d = FVector::Dist(GetActorLocation(), other->GetActorLocation());
+			if ((d > 0) && (d < SepDistance))
+			{
+				steer = steer - (other->GetActorLocation() - GetActorLocation());
+			}
 		}
 	}
 	/*if (steer.Size() > 0) {
@@ -196,13 +207,14 @@ FVector ASwoim::align()
 
 	for (auto& other : SwoimersArray)
 	{
+		if (other->IsValidLowLevel()){
+			float d = FVector::Dist(GetActorLocation(), other->GetActorLocation());
+			if ((d > 0) && (d < AliDistance))
+			{
 
-		float d = FVector::Dist(GetActorLocation(), other->GetActorLocation());
-		if ((d > 0) && (d < AliDistance))
-		{
+				steer += other->velocity;
 
-			steer += other->velocity;
-
+			}
 		}
 	}
 	steer = steer / (SwoimersArray.Num() - 1);
@@ -226,13 +238,14 @@ FVector ASwoim::cohesion()
 
 	for (auto& other : SwoimersArray)
 	{
+		if (other->IsValidLowLevel()){
+			float d = FVector::Dist(GetActorLocation(), other->GetActorLocation());
+			if ((d > 0) && (d < CohDistance))
+			{
 
-		float d = FVector::Dist(GetActorLocation(), other->GetActorLocation());
-		if ((d > 0) && (d < CohDistance))
-		{
+				steer += other->GetActorLocation();
 
-			steer += other->GetActorLocation();
-
+			}
 		}
 	}
 	steer = steer / (SwoimersArray.Num() - 1);
@@ -303,4 +316,10 @@ FVector ASwoim::avoid(FHitResult& HitData) {
 	// Implement this
 	
 	return FVector(0, 0, 0);
+}
+
+FVector ASwoim::attack(ASwoim* targetSwoimer) {
+	//UE_LOG(LogTemp, Warning, TEXT("swoimer attacking"));
+	return targetSwoimer->GetActorLocation() - GetActorLocation();
+	
 }

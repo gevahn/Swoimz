@@ -7,10 +7,11 @@
     <Property Name="Precompile" Value="False" />
   </Properties>
   <BuildProducts>
-    <BuildProduct Path="$(ProjectDir)\Binaries\Win64\UE4Editor-Swoimz-6889.dll" Type="DynamicLibrary" />
-    <BuildProduct Path="$(ProjectDir)\Binaries\Win64\UE4Editor-Swoimz-6889.pdb" Type="SymbolFile" />
-    <BuildProduct Path="$(ProjectDir)\Intermediate\Build\Win64\UE4Editor\Development\UE4Editor-Swoimz-6889.lib" Type="ImportLibrary" />
+    <BuildProduct Path="$(ProjectDir)\Binaries\Win64\UE4Editor-Swoimz-2380.dll" Type="DynamicLibrary" />
+    <BuildProduct Path="$(ProjectDir)\Binaries\Win64\UE4Editor-Swoimz-2380.pdb" Type="SymbolFile" />
+    <BuildProduct Path="$(ProjectDir)\Intermediate\Build\Win64\UE4Editor\Development\UE4Editor-Swoimz-2380.lib" Type="ImportLibrary" />
   </BuildProducts>
   <RuntimeDependencies />
+  <AdditionalProperties />
   <bRequireDependenciesToExist>true</bRequireDependenciesToExist>
 </BuildReceipt>

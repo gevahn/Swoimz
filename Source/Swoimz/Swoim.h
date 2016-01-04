@@ -3,7 +3,10 @@
 #pragma once
 
 #include "GameFramework/Actor.h"
+
 #include "Swoim.generated.h"
+
+
 
 UCLASS()
 class SWOIMZ_API ASwoim : public AActor
@@ -23,13 +26,17 @@ public:
 
 	float maxspeed;
 
+	int32 CurrentHealth;
+	int32 MaxHealth;
+
 
 	float Speedlimit;
 
 	float Forcelimit;
 
 	
-
+	TWeakObjectPtr<class ASwoimController> SwoimController;
+	ASwoim* targetSwoimer;
 
 	float SepDistance;
 	float AliDistance;
@@ -44,6 +51,8 @@ public:
 	UPROPERTY(EditAnywhere)
 		float CenFactor;
 	UPROPERTY(EditAnywhere)
+		float AtkFactor;
+	UPROPERTY(EditAnywhere)
 		float LookAheadDistance;
 	float LookAheadDecay;
 	float AvoFactor1;
@@ -53,6 +62,13 @@ public:
 
 	// Called every frame
 	virtual void Tick(float DeltaSeconds) override;
+
+	virtual void NotifyActorBeginOverlap(AActor* otherActor) override;
+
+	UFUNCTION(BlueprintNativeEvent)
+	void SparkOnOverlap();
+	virtual void SparkOnOverlap_Implementation();
+
 
 	TArray<ASwoim*> SwoimersArray;
 
@@ -71,6 +87,8 @@ public:
 	FVector cohesion();
 	FVector seek(FVector target);
 	FVector avoid(FHitResult& HitData);
+
+	FVector attack(ASwoim* targetSwoimer);
 
 
 private:
