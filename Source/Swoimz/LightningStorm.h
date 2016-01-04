@@ -31,7 +31,7 @@ public:
 	float ArcDistance;
 
 	UPROPERTY(EditAnywhere)
-		float NumOfLights;
+	int32 NumOfLights;
 
 	TArray<UParticleSystemComponent *> LightiningsArray;
 

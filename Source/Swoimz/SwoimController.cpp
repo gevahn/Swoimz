@@ -121,13 +121,7 @@ void ASwoimController::Tick( float DeltaTime )
 	for (auto& other : SwoimersArray)
 	{
 		if (other->IsValidLowLevel()){
-			float d = FVector::Dist(GetActorLocation(), other->GetActorLocation());
-			if ((d > 0) && (d < CohDistance))
-			{
-
-				swoimCM += other->GetActorLocation();
-
-			}
+			swoimCM += other->GetActorLocation();
 		}
 	}
 	swoimCM = swoimCM / (SwoimersArray.Num() - 1);
@@ -135,6 +129,8 @@ void ASwoimController::Tick( float DeltaTime )
 	swoimCM.Z = 300;
 
 	float alpha = 0.8;
+
+	UE_LOG(LogTemp, Warning, TEXT("swoimers center %s"),*swoimCM.ToString());
 	
 	SetActorLocation(swoimCM * (1-alpha) + GetActorLocation() * alpha);
 

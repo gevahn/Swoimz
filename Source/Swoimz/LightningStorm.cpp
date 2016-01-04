@@ -50,7 +50,7 @@ void ALightningStorm::Tick(float DeltaTime)
 	if (HitSwoimers.Num() > 1) {
 		int32 CurInt = FMath::RandRange(0, HitSwoimers.Num() - 1);
 		int32 NextInt = FMath::RandRange(0, HitSwoimers.Num() - 1);
-		for (int i = LightiningsArray.Num(); i < NumOfLights; i++) {
+		for (int i = LightiningsArray.Num(); i < FMath::Min(HitSwoimers.Num(), NumOfLights); i++) {
 			LightiningsArray.Add(Fire(HitSwoimers[CurInt], HitSwoimers[NextInt]));
 			CurInt = NextInt;
 			NextInt = FMath::RandRange(0, HitSwoimers.Num() - 1);
