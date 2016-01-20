@@ -38,11 +38,11 @@ public:
 
 	// reutrns the box to spawn
 	FORCEINLINE UBoxComponent* GetWhereToSpawn() const { return WhereToSpawn; }
-
-	// Find a random point
+	
+	/*// Find a random point
 	UFUNCTION(BlueprintPure, Category = "Spwaning")
 		FVector GetRandomPointInVolume();
-
+		*/
 	UPROPERTY(EditAnywhere)
 		float Speedlimit;
 
@@ -73,7 +73,8 @@ public:
 		float LookAheadDistance;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float LookAheadDecay;
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float CameraOptionSwitch;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float attackRadius;
 
@@ -89,6 +90,7 @@ public:
 	void ReturnToFlock();
 
 	void ZoomCamera(float AxisValue);
+	void CameraCenter();
 
 	void IncreaseCohFactor();
 	void DecreaseCohFactor();

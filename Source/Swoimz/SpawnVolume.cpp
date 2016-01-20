@@ -2,7 +2,6 @@
 
 #include "Swoimz.h"
 #include "SpawnVolume.h"
-#include "Kismet/KismetMathLibrary.h"
 #include "Swoim.h"
 
 #define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White,text)
@@ -59,7 +58,7 @@ void ASpawnVolume::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 }
-
+/*
 FVector ASpawnVolume::GetRandomPointInVolume()
 {
 	FVector SpawnOrigin = WhereToSpawn->Bounds.Origin;
@@ -67,7 +66,7 @@ FVector ASpawnVolume::GetRandomPointInVolume()
 
 	return UKismetMathLibrary::RandomPointInBoundingBox(SpawnOrigin, SpawnExtent);
 
-}
+}*/
 
 ASwoim* ASpawnVolume::SpawnSwoimer()
 {
@@ -80,7 +79,7 @@ ASwoim* ASpawnVolume::SpawnSwoimer()
 			SpawnParams.Owner = this;
 			SpawnParams.Instigator = Instigator;
 
-			FVector SpawnLocation = GetRandomPointInVolume();
+			FVector SpawnLocation = WhereToSpawn->Bounds.Origin;
 
 			FRotator SpawnRotation;
 			SpawnRotation.Yaw = FMath::FRand() * 360.0f;
