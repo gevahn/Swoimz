@@ -61,7 +61,7 @@ void ALightningStorm::Tick(float DeltaTime)
 		
 	
 
-	UE_LOG(LogTemp, Warning, TEXT("LightiningsArray %d"), LightiningsArray.Num());
+	//UE_LOG(LogTemp, Warning, TEXT("LightiningsArray %d"), LightiningsArray.Num());
 
 	bool IsCompeleted = true;
 	for (auto& Lightining : LightiningsArray) {

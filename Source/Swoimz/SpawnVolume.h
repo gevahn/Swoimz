@@ -26,8 +26,8 @@ public:
 	FORCEINLINE UBoxComponent* GetWhereToSpawn() const { return WhereToSpawn; }
 
 	// Find a random point
-	UFUNCTION(BlueprintPure, Category = "Spwaning")
-		FVector GetRandomPointInVolume();
+	//UFUNCTION(BlueprintPure, Category = "Spwaning")
+	//	FVector GetRandomPointInVolume();
 
 	UPROPERTY(EditAnywhere)
 		float Speedlimit;

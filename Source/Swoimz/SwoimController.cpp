@@ -49,7 +49,7 @@ ASwoimController::ASwoimController()
 	LookAheadDistance = 30;
 	LookAheadDecay = 1.5;
 	attackRadius = 30000000;
-	CameraOptionSwitch = false;
+	CameraOptionSwitch = true;
 	NumberOfSwoimers = 50;
 }
 
@@ -129,7 +129,7 @@ void ASwoimController::Tick( float DeltaTime )
 
 	float alpha = 0.8;
 
-	UE_LOG(LogTemp, Warning, TEXT("swoimers center %s"),*swoimCM.ToString());
+	//UE_LOG(LogTemp, Warning, TEXT("swoimers center %s"),*swoimCM.ToString());
 	
 	if(CameraOptionSwitch)
 		SetActorLocation(swoimCM * (1-alpha) + GetActorLocation() * alpha);
@@ -138,15 +138,15 @@ void ASwoimController::Tick( float DeltaTime )
 
 
 }
-/*
+
 FVector ASwoimController::GetRandomPointInVolume()
 {
 	FVector SpawnOrigin = WhereToSpawn->Bounds.Origin;
 	FVector SpawnExtent = WhereToSpawn->Bounds.BoxExtent;
+	
+	return FVector(FMath::FRandRange(SpawnOrigin.X, SpawnExtent.X), FMath::FRandRange(SpawnOrigin.Y, SpawnExtent.Y), FMath::FRandRange(SpawnOrigin.Z, SpawnExtent.Z));
 
-	return UKismetMathLibrary::RandomPointInBoundingBox(SpawnOrigin, SpawnExtent);
-
-}*/
+}
 
 // Called to bind functionality to input
 void ASwoimController::SetupPlayerInputComponent(class UInputComponent* InputComponent)
@@ -218,7 +218,7 @@ ASwoim* ASwoimController::SpawnSwoimer()
 			SpawnParams.Owner = this;
 			SpawnParams.Instigator = Instigator;
 
-			FVector SpawnLocation = WhereToSpawn->Bounds.Origin;
+			FVector SpawnLocation = GetRandomPointInVolume();
 
 			FRotator SpawnRotation;
 			SpawnRotation.Yaw = FMath::FRand() * 360.0f;
