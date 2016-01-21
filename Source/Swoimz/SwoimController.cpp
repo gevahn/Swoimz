@@ -134,7 +134,8 @@ void ASwoimController::Tick( float DeltaTime )
 	if(CameraOptionSwitch)
 		SetActorLocation(swoimCM * (1-alpha) + GetActorLocation() * alpha);
 	else
-		SetActorLocation(center);
+		alpha = 0.99;
+		SetActorLocation(center * (1 - alpha) + GetActorLocation() * alpha);
 
 
 }
