@@ -2,7 +2,6 @@
 
 #include "Swoimz.h"
 #include "SwoimController.h"
-#include "Kismet/KismetMathLibrary.h"
 #include "Swoim.h"
 #include "EngineUtils.h"
 
@@ -50,7 +49,7 @@ ASwoimController::ASwoimController()
 	LookAheadDistance = 30;
 	LookAheadDecay = 1.5;
 	attackRadius = 30000000;
-
+	CameraOptionSwitch = false;
 	NumberOfSwoimers = 50;
 }
 
@@ -132,11 +131,14 @@ void ASwoimController::Tick( float DeltaTime )
 
 	UE_LOG(LogTemp, Warning, TEXT("swoimers center %s"),*swoimCM.ToString());
 	
-	SetActorLocation(swoimCM * (1-alpha) + GetActorLocation() * alpha);
+	if(CameraOptionSwitch)
+		SetActorLocation(swoimCM * (1-alpha) + GetActorLocation() * alpha);
+	else
+		SetActorLocation(center);
 
 
 }
-
+/*
 FVector ASwoimController::GetRandomPointInVolume()
 {
 	FVector SpawnOrigin = WhereToSpawn->Bounds.Origin;
@@ -144,7 +146,7 @@ FVector ASwoimController::GetRandomPointInVolume()
 
 	return UKismetMathLibrary::RandomPointInBoundingBox(SpawnOrigin, SpawnExtent);
 
-}
+}*/
 
 // Called to bind functionality to input
 void ASwoimController::SetupPlayerInputComponent(class UInputComponent* InputComponent)
@@ -164,6 +166,9 @@ void ASwoimController::SetupPlayerInputComponent(class UInputComponent* InputCom
 
 	// Increase Coh Factor
 	InputComponent->BindAction("Increase Coh Factor", IE_Repeat, this, &ASwoimController::IncreaseCohFactor);
+
+	// Camera Center
+	InputComponent->BindAction("Camera Center", IE_Pressed, this, &ASwoimController::CameraCenter);
 
 	// Decrease Coh Factor
 	InputComponent->BindAction("Decrease Coh Factor", IE_Repeat, this, &ASwoimController::DecreaseCohFactor);
@@ -213,7 +218,7 @@ ASwoim* ASwoimController::SpawnSwoimer()
 			SpawnParams.Owner = this;
 			SpawnParams.Instigator = Instigator;
 
-			FVector SpawnLocation = GetRandomPointInVolume();
+			FVector SpawnLocation = WhereToSpawn->Bounds.Origin;
 
 			FRotator SpawnRotation;
 			SpawnRotation.Yaw = FMath::FRand() * 360.0f;
@@ -289,6 +294,13 @@ void ASwoimController::IncreaseCohFactor() {
 	for (auto& swoimer : SwoimersArray) {
 		swoimer->CohFactor = CohFactor;		
 	}
+}
+void ASwoimController::CameraCenter() {	
+	UE_LOG(LogTemp, Warning, TEXT("changing center"));
+	if(CameraOptionSwitch)
+		CameraOptionSwitch = false;
+	else	
+		CameraOptionSwitch = true;
 }
 void ASwoimController::DecreaseCohFactor() {
 	UE_LOG(LogTemp, Warning, TEXT("CohFactor %f"), CohFactor);
