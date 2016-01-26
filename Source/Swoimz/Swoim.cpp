@@ -2,6 +2,7 @@
 
 #include "Swoimz.h"
 #include "Swoim.h"
+#include "Effect.h"
 #include "SwoimController.h"
 
 #define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White,text)
@@ -48,7 +49,15 @@ void ASwoim::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+
 	if (CurrentHealth < 0) return;
+
+	for (auto& effect : ActiveEffects)
+	{
+		if (effect->IsValidLowLevel()) {
+			effect->ApplyEffect(this);
+		}
+	}
 
 	acceleration = FVector(0, 0, 0);
 
