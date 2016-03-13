@@ -72,8 +72,6 @@ public:
 
 	TArray<ASwoim*> SwoimersArray;
 
-	TArray<class Effect* > ActiveEffects;
-
 	UFUNCTION()
 		void OnUpCohPressed();
 	UFUNCTION()
