@@ -152,21 +152,21 @@ void ASwoimController::Tick( float DeltaTime )
 //		SetActorLocation(center * (1 - alpha) + GetActorLocation() * alpha);
 		if (viewportX - mouseX < 30)
 		{
-			SetActorLocation(FVector(0, 10, 0) + GetActorLocation());
+			SetActorLocation(FVector(0, 600, 0) * DeltaTime + GetActorLocation());
 			
 		}
 		if (mouseX<30)
 		{
-			SetActorLocation(FVector(0, -10, 0) + GetActorLocation());
+			SetActorLocation(FVector(0, -600, 0) * DeltaTime + GetActorLocation());
 			
 		}
 		if (viewportY - mouseY<30)
 		{
-			SetActorLocation(FVector(-10, 0, 0) + GetActorLocation());
+			SetActorLocation(FVector(-600, 0, 0) * DeltaTime + GetActorLocation());
 		}
 		if (mouseY<30)
 		{
-			SetActorLocation(FVector(10, 0, 0) + GetActorLocation());
+			SetActorLocation(FVector(600, 0, 0) * DeltaTime + GetActorLocation());
 		}
 
 	}
