@@ -4,6 +4,7 @@
 #include "SwoimController.h"
 #include "Swoim.h"
 #include "EngineUtils.h"
+#include "DrawDebugHelpers.h"
 
 #define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White,text)
 
@@ -14,7 +15,7 @@ ASwoimController::ASwoimController()
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-
+	
 	// create the box for spawn volume
 	WhereToSpawn = CreateDefaultSubobject<UBoxComponent>(TEXT("WhereToSpawn"));
 	RootComponent = WhereToSpawn;
@@ -31,7 +32,7 @@ ASwoimController::ASwoimController()
 	FollowCamera->AttachTo(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 
-	
+	ShowCursor(true);
 
 	// Defaults
 	Speedlimit = 400;
@@ -96,27 +97,38 @@ void ASwoimController::Tick( float DeltaTime )
 {
 	Super::Tick( DeltaTime );
 
-	FVector mouseLocation, mouseDirection;
+	
 	UWorld* const World = GetWorld();
+	FVector CameraLocation;
+	FRotator CameraDirection;
+	FVector mouseLocation, mouseDirection;
+	FVector moveCameraBy;
+	float mouseX, mouseY;
+	int32 viewportX, viewportY;
 	//UE_LOG(LogTemp, Warning, TEXT("swoim is controlled by %s"), *Controller->GetStateName().ToString());
 	if (Controller->IsLocalPlayerController()){
+		
 		//UE_LOG(LogTemp, Warning, TEXT("testing swoim %s"), *(center).ToString());
 		//UE_LOG(LogTemp, Warning, TEXT("swoim is controlled by %s"), *Controller->GetStateName().ToString());
 		//UE_LOG(LogTemp, Warning, TEXT("swoim is controlled"));
 		APlayerController* playerController = (APlayerController*)Controller;// = World->GetFirstPlayerController();
 		playerController->DeprojectMousePositionToWorld(mouseLocation, mouseDirection);
-		FVector CameraLocation;
-		FRotator CameraDirection;
 		playerController->GetPlayerViewPoint(CameraLocation, CameraDirection);
-
-		if (!mouseLocation.ContainsNaN()) {
-			float t = CameraLocation.Z / (CameraLocation - mouseLocation).Z;
-			center = (mouseLocation - CameraLocation) * t + CameraLocation;
+		
+		playerController->GetMousePosition(mouseX, mouseY);
+		playerController->GetViewportSize(viewportX, viewportY);
+		UE_LOG(LogTemp, Warning, TEXT("mouse position x:%f y:%f"), mouseX, mouseY);
+		UE_LOG(LogTemp, Warning, TEXT("viewport x:%d y:%d"), viewportX, viewportY);
+		if (CameraOptionSwitch) {
+			if (!mouseLocation.ContainsNaN()) {
+				float t = CameraLocation.Z / (CameraLocation - mouseLocation).Z;
+				center = (mouseLocation - CameraLocation) * t + CameraLocation;
+			}
 		}
 
 	}
 	FVector swoimCM = FVector(0, 0, 0);
-	
+	//FVector moveCameraBy = FVector(0, 0, 0);
 	for (auto& other : SwoimersArray)
 	{
 		if (other->IsValidLowLevel()){
@@ -128,7 +140,7 @@ void ASwoimController::Tick( float DeltaTime )
 	swoimCM.Z = 300;
 
 	float alpha = 0.8;
-
+	
 	//UE_LOG(LogTemp, Warning, TEXT("swoimers center %s"),*swoimCM.ToString());
 	
 	if (CameraOptionSwitch) {
@@ -136,8 +148,27 @@ void ASwoimController::Tick( float DeltaTime )
 		SetActorLocation(swoimCM * (1 - alpha) + GetActorLocation() * alpha);
 	}
 	else {
-		alpha = 0.99;
-		SetActorLocation(center * (1 - alpha) + GetActorLocation() * alpha);
+//		alpha = 0.99;
+//		SetActorLocation(center * (1 - alpha) + GetActorLocation() * alpha);
+		if (viewportX - mouseX < 30)
+		{
+			SetActorLocation(FVector(0, 10, 0) + GetActorLocation());
+			
+		}
+		if (mouseX<30)
+		{
+			SetActorLocation(FVector(0, -10, 0) + GetActorLocation());
+			
+		}
+		if (viewportY - mouseY<30)
+		{
+			SetActorLocation(FVector(-10, 0, 0) + GetActorLocation());
+		}
+		if (mouseY<30)
+		{
+			SetActorLocation(FVector(10, 0, 0) + GetActorLocation());
+		}
+
 	}
 
 
@@ -164,6 +195,10 @@ void ASwoimController::SetupPlayerInputComponent(class UInputComponent* InputCom
 	// Disperse and return
 	InputComponent->BindAction("Disperse", IE_Pressed, this, &ASwoimController::Disperse);
 	InputComponent->BindAction("ReturnToFlock", IE_Released, this, &ASwoimController::ReturnToFlock);
+
+	// Move To (In free form)
+	InputComponent->BindAction("Move", IE_Pressed, this, &ASwoimController::Move);
+
 
 	// Camera Zoom
 	InputComponent->BindAxis("Zoom", this, &ASwoimController::ZoomCamera);
@@ -278,6 +313,28 @@ void ASwoimController::Disperse() {
 	}
 }
 
+void ASwoimController::Move() {
+	UE_LOG(LogTemp, Warning, TEXT("swoimers move to"));
+	if (!CameraOptionSwitch)
+	{
+		FVector CameraLocation;
+		FRotator CameraDirection;
+		FVector mouseLocation, mouseDirection;
+		//UE_LOG(LogTemp, Warning, TEXT("testing swoim %s"), *(center).ToString());
+		//UE_LOG(LogTemp, Warning, TEXT("swoim is controlled by %s"), *Controller->GetStateName().ToString());
+		//UE_LOG(LogTemp, Warning, TEXT("swoim is controlled"));
+		APlayerController* playerController = (APlayerController*)Controller;// = World->GetFirstPlayerController();
+		playerController->DeprojectMousePositionToWorld(mouseLocation, mouseDirection);
+		playerController->GetPlayerViewPoint(CameraLocation, CameraDirection);
+
+		if (!mouseLocation.ContainsNaN()) {
+			float t = CameraLocation.Z / (CameraLocation - mouseLocation).Z;
+			center = (mouseLocation - CameraLocation) * t + CameraLocation;
+		}
+	}
+	DrawDebugCircle(GetWorld(), center, 1, 30, FColor(255, 0, 0), false, -1, 0, 10);
+}
+
 void ASwoimController::ReturnToFlock() {
 	UE_LOG(LogTemp, Warning, TEXT("swoimers returning"));
 	for (auto& swoimer : SwoimersArray) {
@@ -306,6 +363,7 @@ void ASwoimController::CameraCenter() {
 	else	
 		CameraOptionSwitch = true;
 }
+
 void ASwoimController::DecreaseCohFactor() {
 	UE_LOG(LogTemp, Warning, TEXT("CohFactor %f"), CohFactor);
 	CohFactor -= 0.5;
