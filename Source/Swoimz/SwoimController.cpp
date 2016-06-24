@@ -117,8 +117,8 @@ void ASwoimController::Tick( float DeltaTime )
 		
 		playerController->GetMousePosition(mouseX, mouseY);
 		playerController->GetViewportSize(viewportX, viewportY);
-		UE_LOG(LogTemp, Warning, TEXT("mouse position x:%f y:%f"), mouseX, mouseY);
-		UE_LOG(LogTemp, Warning, TEXT("viewport x:%d y:%d"), viewportX, viewportY);
+		//UE_LOG(LogTemp, Warning, TEXT("mouse position x:%f y:%f"), mouseX, mouseY);
+		//UE_LOG(LogTemp, Warning, TEXT("viewport x:%d y:%d"), viewportX, viewportY);
 		if (CameraOptionSwitch) {
 			if (!mouseLocation.ContainsNaN()) {
 				float t = CameraLocation.Z / (CameraLocation - mouseLocation).Z;
@@ -332,7 +332,9 @@ void ASwoimController::Move() {
 			center = (mouseLocation - CameraLocation) * t + CameraLocation;
 		}
 	}
-	DrawDebugCircle(GetWorld(), center, 1, 30, FColor(255, 0, 0), false, -1, 0, 10);
+	
+	FlushPersistentDebugLines(GetWorld());
+	DrawDebugPoint(GetWorld(), center+FVector(0,0,200), 20, FColor(255, 0, 255),true, -1);
 }
 
 void ASwoimController::ReturnToFlock() {
