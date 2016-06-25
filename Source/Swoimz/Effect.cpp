@@ -3,17 +3,40 @@
 #include "Swoimz.h"
 #include "Effect.h"
 
-Effect::Effect()
+
+// Sets default values for this component's properties
+UEffect::UEffect()
 {
+	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
+	// off to improve performance if you don't need them.
+	bWantsBeginPlay = true;
+	PrimaryComponentTick.bCanEverTick = true;
+
+	// ...
 }
 
-Effect::~Effect()
+
+// Called when the game starts
+void UEffect::BeginPlay()
 {
+	Super::BeginPlay();
+
+	// ...
+	
 }
 
-void Effect::ApplyEffect(ASwoim * swoimer) {
+
+// Called every frame
+void UEffect::TickComponent( float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction )
+{
+	Super::TickComponent( DeltaTime, TickType, ThisTickFunction );
+
+	// ...
+}
+
+void UEffect::ApplyEffect(float DeltaTime) {
 
 }
-void Effect::RemoveEffect(ASwoim * swoimer) {
+void UEffect::RemoveEffect() {
 
 }

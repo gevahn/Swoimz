@@ -2,19 +2,33 @@
 
 #pragma once
 
-/**
- * 
- */
-class SWOIMZ_API Effect : public UObject
+#include "Components/ActorComponent.h"
+#include "Effect.generated.h"
+
+
+UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+class SWOIMZ_API UEffect : public UActorComponent
 {
-public:
-	Effect();
-	~Effect();
+	GENERATED_BODY()
+
+public:	
+	// Sets default values for this component's properties
+	UEffect();
+
+	// Called when the game starts
+	virtual void BeginPlay() override;
+	
+	// Called every frame
+	virtual void TickComponent( float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction ) override;
+
 
 	UParticleSystem* EffectParticle;
 
-	float TimeToLive;
+	float timeToLive;
 
-	virtual void ApplyEffect(class ASwoim* swoimer);
-	virtual void RemoveEffect(class ASwoim* swoimer);
+	class ASwoim* swoimer;
+
+	virtual void ApplyEffect(float DeltaTime);
+	virtual void RemoveEffect();
+	
 };

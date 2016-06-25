@@ -72,7 +72,7 @@ public:
 
 	TArray<ASwoim*> SwoimersArray;
 
-	TArray<class Effect* > ActiveEffects;
+	TArray<class UEffect* > ActiveEffects;
 
 	UFUNCTION()
 		void OnUpCohPressed();
