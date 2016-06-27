@@ -19,6 +19,10 @@ public:
 
 	FVector velocity;
 	FVector acceleration;
+
+	FVector lastX;
+	float lastDt;
+
 	FVector avoidAhead;
 
 	FVector center;

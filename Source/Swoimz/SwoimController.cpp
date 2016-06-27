@@ -82,6 +82,8 @@ void ASwoimController::BeginPlay()
 		SwoimersArray[i]->LookAheadDistance = LookAheadDistance;
 		SwoimersArray[i]->LookAheadDecay = LookAheadDecay;		
 		SwoimersArray[i]->SwoimController = TWeakObjectPtr<ASwoimController>(this);
+		SwoimersArray[i]->lastDt = 0.166;
+		SwoimersArray[i]->lastX = SwoimersArray[i]->GetActorLocation()-FVector(2,0,0);
 
 	}
 	UE_LOG(LogTemp, Warning, TEXT("swoimers updated"));

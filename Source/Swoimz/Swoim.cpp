@@ -41,6 +41,7 @@ void ASwoim::BeginPlay()
 {
 
 	Super::BeginPlay();
+	acceleration = FVector(0, 0, 0);
 
 }
 
@@ -59,7 +60,7 @@ void ASwoim::Tick(float DeltaTime)
 		}
 	}
 
-	acceleration = FVector(0, 0, 0);
+	
 
 	FVector NewLocation = GetActorLocation();
 	FVector HitLocation;
@@ -120,7 +121,7 @@ void ASwoim::Tick(float DeltaTime)
 	atk = atk * AtkFactor;
 	FVector avoid = (avoidAhead)* AvoFactor1 + avoidClosest * AvoFactor2;
 
-	acceleration = sep + ali + coh + cen + avoid + atk;
+	acceleration = acceleration + sep + ali + coh + cen + avoid + atk;
 
 	avoidAhead = avoidAhead / LookAheadDecay;
 
@@ -130,7 +131,7 @@ void ASwoim::Tick(float DeltaTime)
 
 	
 
-	velocity = velocity + acceleration;
+	
 
 	
 	
@@ -142,14 +143,28 @@ void ASwoim::Tick(float DeltaTime)
 	//	velocity = velocity.GetSafeNormal() * 0.3 * Speedlimit;
 	//}
 
-	NewLocation = NewLocation + velocity * DeltaTime;
+	//UE_LOG(LogTemp, Warning, TEXT("swoimer is at %s"), *lastX.ToString());
+	//UE_LOG(LogTemp, Warning, TEXT("lastDt %f"), lastDt);
+	NewLocation = NewLocation + (NewLocation - lastX) * DeltaTime / lastDt + acceleration * (DeltaTime + lastDt) / 2 * DeltaTime;
+		
+	lastX = GetActorLocation();
+	lastDt = DeltaTime;
+
+	velocity = (NewLocation - lastX) / lastDt;
 	
+
 	FHitResult* SweepHitData = &HitData; 
 
 	if (!SetActorLocation(NewLocation, true, SweepHitData)) {
-		velocity = velocity - 2 * FVector::DotProduct(SweepHitData->ImpactNormal, velocity) * SweepHitData->ImpactNormal;		
+		//velocity = velocity - 2 * FVector::DotProduct(SweepHitData->ImpactNormal, velocity) * SweepHitData->ImpactNormal;		
+		acceleration = 2 * FVector::DotProduct(SweepHitData->ImpactNormal, velocity) * SweepHitData->ImpactNormal;
+	}
+	else {
+		acceleration = FVector(0, 0 ,0);
 	}
 	SetActorRotation(velocity.Rotation() + FRotator(-90, 0, 0));
+	//UE_LOG(LogTemp, Warning, TEXT("swoimer is at %s"), *this->GetActorLocation().ToString());
+	
 
 
 }

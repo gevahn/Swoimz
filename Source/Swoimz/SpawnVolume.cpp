@@ -46,6 +46,8 @@ void ASpawnVolume::BeginPlay()
 		SwoimersArray[i]->CohDistance = CohDistance;		
 		SwoimersArray[i]->LookAheadDistance = LookAheadDistance;
 		SwoimersArray[i]->LookAheadDecay = LookAheadDecay;
+		SwoimersArray[i]->lastDt = 0.166;
+		SwoimersArray[i]->lastX = WhereToSpawn->Bounds.Origin;
 
 	}
 	UE_LOG(LogTemp, Warning, TEXT("swoimers updated"));
