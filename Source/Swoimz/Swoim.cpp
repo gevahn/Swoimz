@@ -134,7 +134,7 @@ void ASwoim::Tick(float DeltaTime)
 	
 
 	
-	
+	velocity = (NewLocation - lastX) * DeltaTime / lastDt + acceleration * (DeltaTime + lastDt) / 2 * DeltaTime;
 
 	if (velocity.Size() > Speedlimit) {
 		velocity = velocity.GetSafeNormal() * Speedlimit;
@@ -145,19 +145,19 @@ void ASwoim::Tick(float DeltaTime)
 
 	//UE_LOG(LogTemp, Warning, TEXT("swoimer is at %s"), *lastX.ToString());
 	//UE_LOG(LogTemp, Warning, TEXT("lastDt %f"), lastDt);
-	NewLocation = NewLocation + (NewLocation - lastX) * DeltaTime / lastDt + acceleration * (DeltaTime + lastDt) / 2 * DeltaTime;
+	NewLocation = NewLocation + velocity;
 		
 	lastX = GetActorLocation();
 	lastDt = DeltaTime;
 
-	velocity = (NewLocation - lastX) / lastDt;
+	
 	
 
 	FHitResult* SweepHitData = &HitData; 
 
 	if (!SetActorLocation(NewLocation, true, SweepHitData)) {
 		//velocity = velocity - 2 * FVector::DotProduct(SweepHitData->ImpactNormal, velocity) * SweepHitData->ImpactNormal;		
-		acceleration = 2 * FVector::DotProduct(SweepHitData->ImpactNormal, velocity) * SweepHitData->ImpactNormal;
+		acceleration = 2 * (FVector::DotProduct(SweepHitData->ImpactNormal, velocity) + 100) * SweepHitData->ImpactNormal;
 	}
 	else {
 		acceleration = FVector(0, 0 ,0);

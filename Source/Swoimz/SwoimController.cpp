@@ -146,7 +146,7 @@ void ASwoimController::Tick( float DeltaTime )
 	//UE_LOG(LogTemp, Warning, TEXT("swoimers center %s"),*swoimCM.ToString());
 	
 	if (CameraOptionSwitch) {
-		alpha = 0.8;
+		alpha = 0.2;
 		SetActorLocation(swoimCM * (1 - alpha) + GetActorLocation() * alpha);
 	}
 	else {
