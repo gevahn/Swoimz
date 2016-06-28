@@ -96,7 +96,7 @@ void ASwoim::Tick(float DeltaTime)
 		if (!HitData.GetActor()->GetClass()->IsChildOf(ASwoim::StaticClass())) {
 			FVector ImpactNormalVec = HitData.ImpactNormal;
 
-			FVector DirectionToAvoidImpact = ImpactNormalVec + velocity.GetSafeNormal() * FVector::DotProduct(ImpactNormalVec, velocity.GetSafeNormal());
+			FVector DirectionToAvoidImpact = ImpactNormalVec - velocity.GetSafeNormal() * FVector::DotProduct(ImpactNormalVec, velocity.GetSafeNormal());
 			avoidAhead = DirectionToAvoidImpact.GetSafeNormal() / ((HitData.Distance)*(HitData.Distance));
 			//UE_LOG(LogTemp, Warning, TEXT("mesh ahead, avoid at dir X %f"), avoid.X);
 			//UE_LOG(LogTemp, Warning, TEXT("mesh ahead, avoid at dir Y %f"), avoid.Y);

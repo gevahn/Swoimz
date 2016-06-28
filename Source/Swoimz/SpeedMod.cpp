@@ -21,7 +21,7 @@ void USpeedMod::BeginPlay()
 
 
 void USpeedMod::ApplyEffect(float DeltaTime) {
-	swoimer->maxspeed += speedChange;
+	swoimer->maxspeed += powerLevel;
 	timeToLive -= DeltaTime;
 	if (timeToLive < 0) {
 		RemoveEffect();

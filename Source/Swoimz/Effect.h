@@ -26,6 +26,9 @@ public:
 
 	float timeToLive;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float powerLevel;
+
 	class ASwoim* swoimer;
 
 	virtual void ApplyEffect(float DeltaTime);
