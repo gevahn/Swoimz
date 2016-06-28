@@ -59,7 +59,7 @@ void ASwoimController::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	SwoimersArray;
+	
 	for (int i = 0; i < NumberOfSwoimers; i++){
 		SwoimersArray.Add(SpawnSwoimer());
 	}
@@ -179,7 +179,10 @@ void ASwoimController::Tick( float DeltaTime )
 FVector ASwoimController::GetRandomPointInVolume()
 {
 	FVector SpawnOrigin = WhereToSpawn->Bounds.Origin;
-	FVector SpawnExtent = WhereToSpawn->Bounds.BoxExtent;
+	FVector SpawnExtent = SpawnOrigin + WhereToSpawn->Bounds.BoxExtent;
+
+	UE_LOG(LogTemp, Warning, TEXT("origin bounds is at %s"), *SpawnOrigin.ToString());
+	UE_LOG(LogTemp, Warning, TEXT("extent bounds is at %s"), *SpawnExtent.ToString());
 	
 	return FVector(FMath::FRandRange(SpawnOrigin.X, SpawnExtent.X), FMath::FRandRange(SpawnOrigin.Y, SpawnExtent.Y), FMath::FRandRange(SpawnOrigin.Z, SpawnExtent.Z));
 

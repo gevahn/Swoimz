@@ -5,6 +5,6 @@ Saved
 Build
 *.opensdf
 *.sln
-*.sou
+*.suo
 *.sdf
 *.xcodeproj
