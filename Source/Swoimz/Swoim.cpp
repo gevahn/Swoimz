@@ -97,7 +97,7 @@ void ASwoim::Tick(float DeltaTime)
 			FVector ImpactNormalVec = HitData.ImpactNormal;
 
 			FVector DirectionToAvoidImpact = ImpactNormalVec - velocity.GetSafeNormal() * FVector::DotProduct(ImpactNormalVec, velocity.GetSafeNormal());
-			avoidAhead = DirectionToAvoidImpact / (HitData.Distance - 20);
+			avoidAhead = DirectionToAvoidImpact.GetSafeNormal() / ((HitData.Distance)*(HitData.Distance));
 			//UE_LOG(LogTemp, Warning, TEXT("mesh ahead, avoid at dir X %f"), avoid.X);
 			//UE_LOG(LogTemp, Warning, TEXT("mesh ahead, avoid at dir Y %f"), avoid.Y);
 			//UE_LOG(LogTemp, Warning, TEXT("mesh ahead, avoid at dir Z %f"), avoid.Z);
@@ -157,7 +157,7 @@ void ASwoim::Tick(float DeltaTime)
 
 	if (!SetActorLocation(NewLocation, true, SweepHitData)) {
 		//velocity = velocity - 2 * FVector::DotProduct(SweepHitData->ImpactNormal, velocity) * SweepHitData->ImpactNormal;		
-		acceleration = 2 * (FVector::DotProduct(SweepHitData->ImpactNormal, velocity) + 100) * SweepHitData->ImpactNormal;
+		acceleration = 2 * (FVector::DotProduct(SweepHitData->ImpactNormal, velocity) + 800) * SweepHitData->ImpactNormal;
 	}
 	else {
 		acceleration = FVector(0, 0 ,0);
