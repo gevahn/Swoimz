@@ -54,7 +54,7 @@ void ASwoim::Tick(float DeltaTime)
 	if (CurrentHealth < 0) return;
 
 	for (auto& effect : ActiveEffects)
-	{
+ 	{
 		if (effect->IsValidLowLevel()) {
 			effect->ApplyEffect(DeltaTime);
 		}
