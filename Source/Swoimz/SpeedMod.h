@@ -16,7 +16,7 @@ class SWOIMZ_API USpeedMod : public UEffect
 	USpeedMod();
 	virtual void BeginPlay() override;
 
-	float speedChange;
+	float speedChange = 50;
 	
 	virtual void ApplyEffect(float DeltaTime) override;
 	virtual void RemoveEffect() override;
