@@ -15,18 +15,20 @@ USpeedMod::USpeedMod()
 void USpeedMod::BeginPlay()
 {
 	Super::BeginPlay();
-	UGameplayStatics::SpawnEmitterAttached(EffectParticle, swoimer->GetMesh());
+	
 }
 
 
 
 void USpeedMod::ApplyEffect(float DeltaTime) {
+	UE_LOG(LogTemp, Warning, TEXT("applying effect"));
 	swoimer->maxspeed += powerLevel;
 	timeToLive -= DeltaTime;
 	if (timeToLive < 0) {
 		RemoveEffect();
 	}
+	UGameplayStatics::SpawnEmitterAttached(EffectParticle, swoimer->GetMesh());
 }
 void USpeedMod::RemoveEffect() {
-	swoimer->ActiveEffects.Remove(this);
+	swoimer->ActiveEffects.Remove(this);	
 }
