@@ -94,10 +94,11 @@ void ASwoim::Tick(float DeltaTime)
 	
 	if (TraceAhead(NewLocation, NewLocation + LookAheadDistance * DeltaTime * velocity, World, HitData)) {		
 		if (!HitData.GetActor()->GetClass()->IsChildOf(ASwoim::StaticClass())) {
+			
 			FVector ImpactNormalVec = HitData.ImpactNormal;
 
 			FVector DirectionToAvoidImpact = ImpactNormalVec - velocity.GetSafeNormal() * FVector::DotProduct(ImpactNormalVec, velocity.GetSafeNormal());
-			avoidAhead = DirectionToAvoidImpact.GetSafeNormal() / ((HitData.Distance)*(HitData.Distance));
+			avoidAhead = DirectionToAvoidImpact.GetSafeNormal() / ((HitData.Distance));
 			//UE_LOG(LogTemp, Warning, TEXT("mesh ahead, avoid at dir X %f"), avoid.X);
 			//UE_LOG(LogTemp, Warning, TEXT("mesh ahead, avoid at dir Y %f"), avoid.Y);
 			//UE_LOG(LogTemp, Warning, TEXT("mesh ahead, avoid at dir Z %f"), avoid.Z);
@@ -107,11 +108,12 @@ void ASwoim::Tick(float DeltaTime)
 	}
 
 	FVector avoidClosest = FVector(0, 0, 0);
-	//if (ActorGetDistanceToCollision(NewLocation, ECollisionChannel::ECC_WorldStatic, avoidClosest) > 0) {
+	if (ActorGetDistanceToCollision(NewLocation, ECollisionChannel::ECC_WorldStatic, avoidClosest) > 0) {
 	//	if (avoidClosest.Size() < 200){
-	//		avoidClosest = NewLocation - avoidClosest;
+			avoidClosest = NewLocation - avoidClosest;
+			avoidClosest = avoidClosest.GetSafeNormal() / avoidClosest.Size();
 	//	}
-	//}
+	}
 	//center = center + 30 * DeltaTime*FVector(-FMath::Sin(DeltaTime), FMath::Cos(DeltaTime), 0);
 
 	sep = sep * SepFactor;
@@ -120,6 +122,8 @@ void ASwoim::Tick(float DeltaTime)
 	cen = cen * CenFactor;
 	atk = atk * AtkFactor;
 	FVector avoid = (avoidAhead)* AvoFactor1 + avoidClosest * AvoFactor2;
+
+	//UE_LOG(LogTemp, Warning, TEXT("applying effect %s"),*avoid.ToString());
 
 	acceleration = acceleration + sep + ali + coh + cen + avoid + atk;
 
@@ -157,7 +161,7 @@ void ASwoim::Tick(float DeltaTime)
 
 	if (!SetActorLocation(NewLocation, true, SweepHitData)) {
 		//velocity = velocity - 2 * FVector::DotProduct(SweepHitData->ImpactNormal, velocity) * SweepHitData->ImpactNormal;		
-		acceleration = 2 * (FVector::DotProduct(SweepHitData->ImpactNormal, velocity) + 800) * SweepHitData->ImpactNormal;
+		acceleration = 2 * (FVector::DotProduct(SweepHitData->ImpactNormal, velocity) + 8000000000) * SweepHitData->ImpactNormal;
 	}
 	else {
 		acceleration = FVector(0, 0 ,0);

@@ -3,6 +3,7 @@
 #include "Swoimz.h"
 #include "SpeedMod.h"
 #include "Swoim.h"
+#include "SwoimController.h"
 
 
 
@@ -21,8 +22,8 @@ void USpeedMod::BeginPlay()
 
 
 void USpeedMod::ApplyEffect(float DeltaTime) {
-	UE_LOG(LogTemp, Warning, TEXT("applying effect"));
-	swoimer->maxspeed += powerLevel;
+	
+	swoimer->Speedlimit = powerLevel;
 	timeToLive -= DeltaTime;
 	if (timeToLive < 0) {
 		RemoveEffect();
@@ -30,5 +31,6 @@ void USpeedMod::ApplyEffect(float DeltaTime) {
 	UGameplayStatics::SpawnEmitterAttached(EffectParticle, swoimer->GetMesh());
 }
 void USpeedMod::RemoveEffect() {
+	swoimer->Speedlimit = swoimer->SwoimController->Speedlimit;
 	swoimer->ActiveEffects.Remove(this);	
 }
