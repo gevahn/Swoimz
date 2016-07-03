@@ -4,6 +4,7 @@
 #include "Swoim.h"
 #include "Effect.h"
 #include "SwoimController.h"
+#include "DrawDebugHelpers.h"
 
 #define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White,text)
 
@@ -98,7 +99,12 @@ void ASwoim::Tick(float DeltaTime)
 			FVector ImpactNormalVec = HitData.ImpactNormal;
 
 			FVector DirectionToAvoidImpact = ImpactNormalVec - velocity.GetSafeNormal() * FVector::DotProduct(ImpactNormalVec, velocity.GetSafeNormal());
-			avoidAhead = DirectionToAvoidImpact.GetSafeNormal() / ((HitData.Distance));
+			//avoidAhead = DirectionToAvoidImpact.GetSafeNormal() / ((HitData.Distance));
+
+			if ((DirectionToAvoidImpact.GetSafeNormal() / (HitData.Distance)).Size() > avoidAhead.Size()) {
+				avoidAhead = DirectionToAvoidImpact.GetSafeNormal() / ((HitData.Distance));
+			}
+
 			//UE_LOG(LogTemp, Warning, TEXT("mesh ahead, avoid at dir X %f"), avoid.X);
 			//UE_LOG(LogTemp, Warning, TEXT("mesh ahead, avoid at dir Y %f"), avoid.Y);
 			//UE_LOG(LogTemp, Warning, TEXT("mesh ahead, avoid at dir Z %f"), avoid.Z);
@@ -121,7 +127,16 @@ void ASwoim::Tick(float DeltaTime)
 	coh = coh * CohFactor;
 	cen = cen * CenFactor;
 	atk = atk * AtkFactor;
+
+
 	FVector avoid = (avoidAhead)* AvoFactor1 + avoidClosest * AvoFactor2;
+
+	if (debugSwoimer) {
+		//FlushPersistentDebugLines(GetWorld());
+		DrawDebugDirectionalArrow(GetWorld(), GetActorLocation(), GetActorLocation() + (avoidAhead)* AvoFactor1, 20, FColor(255, 0, 0), true, 0.05, 0, 10);
+		DrawDebugDirectionalArrow(GetWorld(), GetActorLocation(), GetActorLocation() + avoidClosest * AvoFactor2, 20, FColor(0, 255, 0), true, 0.05, 0, 10);
+		DrawDebugDirectionalArrow(GetWorld(), GetActorLocation(), GetActorLocation() + LookAheadDistance * DeltaTime * velocity, 20, FColor(0, 0, 255), true, 0.05, 0, 10);
+	}
 
 	//UE_LOG(LogTemp, Warning, TEXT("applying effect %s"),*avoid.ToString());
 

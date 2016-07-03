@@ -86,6 +86,7 @@ void ASwoimController::BeginPlay()
 		SwoimersArray[i]->lastX = SwoimersArray[i]->GetActorLocation()-FVector(2,0,0);
 
 	}
+	SwoimersArray[0]->debugSwoimer = true;
 	UE_LOG(LogTemp, Warning, TEXT("swoimers updated"));
 	center = WhereToSpawn->Bounds.Origin;
 

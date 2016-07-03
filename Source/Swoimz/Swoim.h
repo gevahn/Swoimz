@@ -46,6 +46,8 @@ public:
 	float AliDistance;
 	float CohDistance;
 
+	bool debugSwoimer = false;
+
 	UPROPERTY(EditAnywhere)
 		float SepFactor;
 	UPROPERTY(EditAnywhere)
