@@ -23,7 +23,7 @@ ASwoimController::ASwoimController()
 	// Create a camera boom (pulls in towards the player if there is a collision)
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->AttachTo(RootComponent);
-	CameraBoom->TargetArmLength = 300.0f; // The camera follows at this distance behind the character	
+	CameraBoom->TargetArmLength = 3000.0f; // The camera follows at this distance behind the character	
 	CameraBoom->AddLocalOffset(FVector(-1, 0, 2));
 	CameraBoom->bUsePawnControlRotation = false; // Rotate the arm based on the controller
 
@@ -82,8 +82,8 @@ void ASwoimController::BeginPlay()
 		SwoimersArray[i]->LookAheadDistance = LookAheadDistance;
 		SwoimersArray[i]->LookAheadDecay = LookAheadDecay;		
 		SwoimersArray[i]->SwoimController = TWeakObjectPtr<ASwoimController>(this);
-		SwoimersArray[i]->lastDt = 0.166;
-		SwoimersArray[i]->lastX = SwoimersArray[i]->GetActorLocation()-FVector(2,0,0);
+		SwoimersArray[i]->lastDt = 0.0166;
+		SwoimersArray[i]->lastX = SwoimersArray[i]->GetActorLocation();
 
 	}
 	SwoimersArray[0]->debugSwoimer = true;
@@ -129,50 +129,73 @@ void ASwoimController::Tick( float DeltaTime )
 			}
 		}
 
-	}
-	FVector swoimCM = FVector(0, 0, 0);
-	//FVector moveCameraBy = FVector(0, 0, 0);
-	for (auto& other : SwoimersArray)
-	{
-		if (other->IsValidLowLevel()){
-			swoimCM += other->GetActorLocation();
+		FVector swoimCM = FVector(0, 0, 0);
+		//FVector moveCameraBy = FVector(0, 0, 0);
+		for (auto& other : SwoimersArray)
+		{
+			if (other->IsValidLowLevel()) {
+				swoimCM += other->GetActorLocation();
+			}
+		}
+		swoimCM = swoimCM / SwoimersArray.Num();
+
+		FVector p = FVector(0, 0, 0);
+		FVector m = FVector(0, 0, 0);
+		for (auto& other : SwoimersArray)
+		{
+			if (other->IsValidLowLevel()) {
+				p += other->velocity.GetSafeNormal();
+				m += FVector::CrossProduct((other->GetActorLocation() - swoimCM).GetSafeNormal(), other->velocity.GetSafeNormal());
+			}
+		}
+
+		p = p / SwoimersArray.Num();
+		m = m / SwoimersArray.Num();
+
+		UE_LOG(LogTemp, Warning, TEXT("swoim p %f"), p.Size());
+		UE_LOG(LogTemp, Warning, TEXT("swoim m %f"), m.Size());
+		swoimCM.Z = 300;
+		
+		if (CameraOptionSwitch) {
+			float alpha = 0.2;
+			SetActorLocation(swoimCM * (1 - alpha) + GetActorLocation() * alpha);
+		}
+		else {
+			//		alpha = 0.99;
+			//		SetActorLocation(center * (1 - alpha) + GetActorLocation() * alpha);
+			if (viewportX - mouseX < 30)
+			{
+				SetActorLocation(FVector(0, 600, 0) * DeltaTime + GetActorLocation());
+
+			}
+			if (mouseX<30)
+			{
+				SetActorLocation(FVector(0, -600, 0) * DeltaTime + GetActorLocation());
+
+			}
+			if (viewportY - mouseY<30)
+			{
+				SetActorLocation(FVector(-600, 0, 0) * DeltaTime + GetActorLocation());
+			}
+			if (mouseY<30)
+			{
+				SetActorLocation(FVector(600, 0, 0) * DeltaTime + GetActorLocation());
+			}
+
 		}
 	}
-	swoimCM = swoimCM / (SwoimersArray.Num() - 1);
 
-	swoimCM.Z = 300;
 
-	float alpha = 0.8;
+	
+
+
+	
+
+	
 	
 	//UE_LOG(LogTemp, Warning, TEXT("swoimers center %s"),*swoimCM.ToString());
 	
-	if (CameraOptionSwitch) {
-		alpha = 0.2;
-		SetActorLocation(swoimCM * (1 - alpha) + GetActorLocation() * alpha);
-	}
-	else {
-//		alpha = 0.99;
-//		SetActorLocation(center * (1 - alpha) + GetActorLocation() * alpha);
-		if (viewportX - mouseX < 30)
-		{
-			SetActorLocation(FVector(0, 600, 0) * DeltaTime + GetActorLocation());
-			
-		}
-		if (mouseX<30)
-		{
-			SetActorLocation(FVector(0, -600, 0) * DeltaTime + GetActorLocation());
-			
-		}
-		if (viewportY - mouseY<30)
-		{
-			SetActorLocation(FVector(-600, 0, 0) * DeltaTime + GetActorLocation());
-		}
-		if (mouseY<30)
-		{
-			SetActorLocation(FVector(600, 0, 0) * DeltaTime + GetActorLocation());
-		}
-
-	}
+	
 
 
 }

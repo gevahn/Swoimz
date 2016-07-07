@@ -117,7 +117,7 @@ void ASwoim::Tick(float DeltaTime)
 	if (ActorGetDistanceToCollision(NewLocation, ECollisionChannel::ECC_WorldStatic, avoidClosest) > 0) {
 	//	if (avoidClosest.Size() < 200){
 			avoidClosest = NewLocation - avoidClosest;
-			avoidClosest = avoidClosest.GetSafeNormal() / avoidClosest.Size();
+			avoidClosest = avoidClosest.GetSafeNormal() / (avoidClosest.Size()*avoidClosest.Size());
 	//	}
 	}
 	//center = center + 30 * DeltaTime*FVector(-FMath::Sin(DeltaTime), FMath::Cos(DeltaTime), 0);
@@ -131,16 +131,16 @@ void ASwoim::Tick(float DeltaTime)
 
 	FVector avoid = (avoidAhead)* AvoFactor1 + avoidClosest * AvoFactor2;
 
-	if (debugSwoimer) {
-		//FlushPersistentDebugLines(GetWorld());
-		DrawDebugDirectionalArrow(GetWorld(), GetActorLocation(), GetActorLocation() + (avoidAhead)* AvoFactor1, 20, FColor(255, 0, 0), true, 0.05, 0, 10);
-		DrawDebugDirectionalArrow(GetWorld(), GetActorLocation(), GetActorLocation() + avoidClosest * AvoFactor2, 20, FColor(0, 255, 0), true, 0.05, 0, 10);
-		DrawDebugDirectionalArrow(GetWorld(), GetActorLocation(), GetActorLocation() + LookAheadDistance * DeltaTime * velocity, 20, FColor(0, 0, 255), true, 0.05, 0, 10);
-	}
+
 
 	//UE_LOG(LogTemp, Warning, TEXT("applying effect %s"),*avoid.ToString());
 
-	acceleration = acceleration + sep + ali + coh + cen + avoid + atk;
+	if (sep.Size() > 0) {
+		acceleration = acceleration + sep;
+	}
+	else {
+		acceleration = acceleration + sep + ali + coh + cen + avoid + atk;
+	}
 
 	avoidAhead = avoidAhead / LookAheadDecay;
 
@@ -165,6 +165,15 @@ void ASwoim::Tick(float DeltaTime)
 	//UE_LOG(LogTemp, Warning, TEXT("swoimer is at %s"), *lastX.ToString());
 	//UE_LOG(LogTemp, Warning, TEXT("lastDt %f"), lastDt);
 	NewLocation = NewLocation + velocity;
+
+	if (debugSwoimer) {
+		//FlushPersistentDebugLines(GetWorld());
+		DrawDebugDirectionalArrow(GetWorld(), GetActorLocation(), GetActorLocation() + sep, 20, FColor(255, 0, 0), true, 0.05, 0, 10);
+		DrawDebugDirectionalArrow(GetWorld(), GetActorLocation(), GetActorLocation() + ali, 20, FColor(0, 255, 0), true, 0.05, 0, 10);
+		DrawDebugDirectionalArrow(GetWorld(), GetActorLocation(), GetActorLocation() + coh, 20, FColor(0, 0, 255), true, 0.05, 0, 10);
+		//UE_LOG(LogTemp, Warning, TEXT("swoimer V %f"), CohFactor);
+		//UE_LOG(LogTemp, Warning, TEXT("swoimer A %s"), *acceleration.ToString());
+	}
 		
 	lastX = GetActorLocation();
 	lastDt = DeltaTime;
@@ -215,84 +224,78 @@ FVector ASwoim::separate()
 {
 
 	FVector steer = FVector(0, 0, 0);
-	//int count = 0;
-	//char buffer[33];
-
+	int count = 0;
+	
 	for (auto& other : SwoimersArray)
 	{
 		if (other->IsValidLowLevel()){
 			float d = FVector::Dist(GetActorLocation(), other->GetActorLocation());
 			if ((d > 0) && (d < SepDistance))
 			{
-				steer = steer - (other->GetActorLocation() - GetActorLocation());
+				steer = steer - (other->GetActorLocation() - GetActorLocation()).GetUnsafeNormal();
+				count++;
 			}
 		}
 	}
-	/*if (steer.Size() > 0) {
-	steer = steer.GetUnsafeNormal() * Speedlimit;
-	steer = steer - velocity;
-	if (steer.Size() > Forcelimit) {
-	steer = steer.GetUnsafeNormal() * Forcelimit;
+	if (count > 0) {
+		return steer / count;
 	}
-	}*/
-	return steer;
+	else
+		return steer;
 }
 
 
 FVector ASwoim::align()
 {
 
-	float Speedlimit = 10;
 	FVector steer = FVector(0, 0, 0);
-
-
+	int count = 0;
 
 	for (auto& other : SwoimersArray)
 	{
 		if (other->IsValidLowLevel()){
 			float d = FVector::Dist(GetActorLocation(), other->GetActorLocation());
-			if ((d > 0) && (d < AliDistance))
+			if ((d > SepDistance) && (d < AliDistance))
 			{
 
-				steer += other->velocity;
-
+				steer += (other->velocity - velocity).GetSafeNormal();
+				count++;
 			}
 		}
 	}
-	steer = steer / (SwoimersArray.Num() - 1);
-	/*
-	if (steer.Size() > 0) {
-	steer = steer.GetUnsafeNormal() * Speedlimit;
-	steer = steer - velocity;
-	if (steer.Size() > Forcelimit) {
-	steer = steer.GetUnsafeNormal() * Forcelimit;
+	
+	if (count > 0) {
+		return steer / count;
 	}
-	}*/
-	return steer;
+	else
+		return steer;
 }
 FVector ASwoim::cohesion()
 {
 
-	float Speedlimit = 10;
+	
 	FVector steer = FVector(0, 0, 0);
-
-
+	int count = 0;
 
 	for (auto& other : SwoimersArray)
 	{
 		if (other->IsValidLowLevel()){
 			float d = FVector::Dist(GetActorLocation(), other->GetActorLocation());
-			if ((d > 0) && (d < CohDistance))
+			if ((d > AliDistance) && (d < CohDistance))
 			{
-
-				steer += other->GetActorLocation();
-
+				steer = steer + (other->GetActorLocation() - GetActorLocation()).GetUnsafeNormal();				
+				count++;
 			}
 		}
 	}
-	steer = steer / (SwoimersArray.Num() - 1);
-
-	return steer - GetActorLocation();
+	
+	if (count > 0) {
+		return steer / count;
+	}
+	else {
+		//Destroy();
+		return steer;
+	}
 }
 
 FVector ASwoim::seek(FVector target) {
@@ -306,7 +309,10 @@ FVector ASwoim::seek(FVector target) {
 	steer = steer.GetUnsafeNormal() * Forcelimit;
 	}
 	}*/
-	return desired;
+	if (desired.Size() > 10) {
+		return desired.GetSafeNormal();
+	}
+	else return FVector(0, 0, 0);
 
 }
 
