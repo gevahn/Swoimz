@@ -40,7 +40,7 @@ public:
 	FORCEINLINE UBoxComponent* GetWhereToSpawn() const { return WhereToSpawn; }
 	
 	// Find a random point
-	UFUNCTION(BlueprintPure, Category = "Spwaning")
+	UFUNCTION(BlueprintPure, Category = "Spawning")
 		FVector GetRandomPointInVolume();
 		
 	UPROPERTY(EditAnywhere)
@@ -115,15 +115,15 @@ public:
 
 protected:
 	// the pickup to spawn
-	UPROPERTY(EditAnywhere, Category = "Spawing")
+	UPROPERTY(EditAnywhere, Category = "Spawning")
 		TSubclassOf<class ASwoim> WhatToSpawn;
 
 private:
 	//box componenet to spawn in
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Spawing", meta = (AllowPrivateACcess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Spawning", meta = (AllowPrivateACcess = "true"))
 	class UBoxComponent* WhereToSpawn;
 
-	// Spawn a new pickup
+	// Spawn a new swoimer
 	ASwoim* SpawnSwoimer();
 
 	

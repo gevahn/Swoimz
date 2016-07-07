@@ -22,17 +22,18 @@ public:
 
 	virtual void NotifyActorBeginOverlap(AActor* otherActor) override;
 	
-private:
-	//box componenet to spawn in
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Box", meta = (AllowPrivateACcess = "true"))
-		class UBoxComponent* CollectableBox;
-
-protected:
 	// the effect to generate
 	UPROPERTY(EditAnywhere, Category = "Effect")
 		TSubclassOf<class UEffect>  WhichEffect;
 
 	UPROPERTY(EditAnywhere, Category = "Effect")
 		UParticleSystem* WhichParticle;
-	
+
+private:
+	//box componenet to spawn in
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Box", meta = (AllowPrivateACcess = "true"))
+		class UBoxComponent* CollectableBox;
+
+
+
 };
