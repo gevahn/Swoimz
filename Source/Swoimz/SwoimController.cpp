@@ -152,8 +152,8 @@ void ASwoimController::Tick( float DeltaTime )
 		p = p / SwoimersArray.Num();
 		m = m / SwoimersArray.Num();
 
-		UE_LOG(LogTemp, Warning, TEXT("swoim p %f"), p.Size());
-		UE_LOG(LogTemp, Warning, TEXT("swoim m %f"), m.Size());
+		//UE_LOG(LogTemp, Warning, TEXT("swoim p %f"), p.Size());
+		//UE_LOG(LogTemp, Warning, TEXT("swoim m %f"), m.Size());
 		swoimCM.Z = 300;
 		
 		if (CameraOptionSwitch) {

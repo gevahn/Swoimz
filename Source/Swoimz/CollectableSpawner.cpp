@@ -25,23 +25,26 @@ ACollectableSpawner::ACollectableSpawner()
 void ACollectableSpawner::BeginPlay()
 {
 	Super::BeginPlay();
-	time = (int)FMath::FRandRange(100, 300);
+	time = 0;
 }
 
 // Called every frame
 void ACollectableSpawner::Tick( float DeltaTime )
 {
 	Super::Tick( DeltaTime );
-	if (time == 0)
+	if (time <= 0)
 	{
 		ACollectable* spawnedCollectable = SpawnCollectable();
 		time = (int)FMath::FRandRange(100, 300);
-		spawnedCollectable->WhichEffect = WhichEffect;
-		spawnedCollectable->WhichParticle = WhichParticle;
+		if (spawnedCollectable) {
+			UE_LOG(LogTemp, Warning, TEXT("spawned collectable"));
+			spawnedCollectable->WhichEffect = WhichEffect;
+			spawnedCollectable->WhichParticle = WhichParticle;
+		}
 	}
 	else
 	{
-		time--;
+		time =- DeltaTime;
 	}
 }
 
@@ -59,11 +62,14 @@ FVector ACollectableSpawner::GetRandomPointInVolume()
 // Spawns a collectable 
 ACollectable* ACollectableSpawner::SpawnCollectable()
 {
+	UE_LOG(LogTemp, Warning, TEXT("spawned collectable called"));
 	if (WhatToSpawn != NULL)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("there is somwthing to spawn"));
 		UWorld* const World = GetWorld();
 		if (World)
 		{
+			UE_LOG(LogTemp, Warning, TEXT("there is a world"));
 			FActorSpawnParameters SpawnParams;
 			SpawnParams.Owner = this;
 			SpawnParams.Instigator = Instigator;

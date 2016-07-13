@@ -209,7 +209,7 @@ void ASwoim::NotifyActorBeginOverlap(AActor* otherActor) {
 				testSwoimer->SwoimersArray.Remove(testSwoimer);
 				testSwoimer->SwoimController->SwoimersArray.Remove(testSwoimer);
 				testSwoimer->SwoimController->NumberOfSwoimers -= 1;
-				UE_LOG(LogTemp, Warning, TEXT("swoimer %s died"), *(otherActor->GetName()));
+				//UE_LOG(LogTemp, Warning, TEXT("swoimer %s died"), *(otherActor->GetName()));
 			}
 			SparkOnOverlap();
 		}

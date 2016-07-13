@@ -34,7 +34,7 @@ void ACollectable::Tick( float DeltaTime )
 
 void ACollectable::NotifyActorBeginOverlap(AActor* otherActor) {
 	ASwoim* testSwoimer = Cast<ASwoim>(otherActor);
-	UE_LOG(LogTemp, Warning, TEXT("swoimer overlapping %s"), *(otherActor->GetName()));
+	//UE_LOG(LogTemp, Warning, TEXT("swoimer overlapping %s"), *(otherActor->GetName()));
 	if (testSwoimer) {
 		UE_LOG(LogTemp, Warning, TEXT("applying effect"));
 		UEffect* buff = Cast<UEffect>(WhichEffect.GetDefaultObject());
