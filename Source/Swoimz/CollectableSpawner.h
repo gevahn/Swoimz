@@ -37,7 +37,7 @@ public:
 protected:
 	// the pickup to spawn
 	UPROPERTY(EditAnywhere, Category = "Spawning")
-		TSubclassOf<class AActor> WhatToSpawn;
+		TSubclassOf<class ACollectable> WhatToSpawn;
 
 private:
 	//box componenet to spawn in
@@ -45,9 +45,9 @@ private:
 		class UBoxComponent* WhereToSpawn;
 
 	// Spawn a new swoimer
-		AActor* SpawnCollectable();
+	ACollectable* SpawnCollectable();
 
 	// Random Timer
-	float time;
+	int time;
 	
 };

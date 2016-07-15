@@ -31,10 +31,9 @@ public:
 
 private:
 	//box componenet to spawn in
-	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Box", meta = (AllowPrivateACcess = "true"))
-		//class UBoxComponent* CollectableBox;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Box", meta = (AllowPrivateACcess = "true"))
+		class UBoxComponent* CollectableBox;
 
-		UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Swarmer", meta = (AllowPrivateAccess = "true"))
-		class UStaticMeshComponent* CollectableMesh;
+
 
 };
