@@ -32,19 +32,23 @@ void ACollectableSpawner::BeginPlay()
 void ACollectableSpawner::Tick( float DeltaTime )
 {
 	Super::Tick( DeltaTime );
-	if (time <= 0)
+	//UE_LOG(LogTemp, Warning, TEXT("time %f"), time);
+	if (time < 0)
 	{
-		ACollectable* spawnedCollectable = SpawnCollectable();
-		time = (int)FMath::FRandRange(100, 300);
+		time = 1;
+		//UE_LOG(LogTemp, Warning, TEXT("time %f"),time);
+		AActor* spawnedCollectable = SpawnCollectable();
+		//time = (int)FMath::FRandRange(100, 300);
+		//UE_LOG(LogTemp, Warning, TEXT("spawned collectable"));
 		if (spawnedCollectable) {
 			UE_LOG(LogTemp, Warning, TEXT("spawned collectable"));
-			spawnedCollectable->WhichEffect = WhichEffect;
-			spawnedCollectable->WhichParticle = WhichParticle;
+			//spawnedCollectable->WhichEffect = WhichEffect;
+//			spawnedCollectable->WhichParticle = WhichParticle;
 		}
 	}
 	else
 	{
-		time =- DeltaTime;
+		time -= DeltaTime;
 	}
 }
 
@@ -60,7 +64,7 @@ FVector ACollectableSpawner::GetRandomPointInVolume()
 }
 
 // Spawns a collectable 
-ACollectable* ACollectableSpawner::SpawnCollectable()
+AActor* ACollectableSpawner::SpawnCollectable()
 {
 	UE_LOG(LogTemp, Warning, TEXT("spawned collectable called"));
 	if (WhatToSpawn != NULL)
@@ -75,13 +79,14 @@ ACollectable* ACollectableSpawner::SpawnCollectable()
 			SpawnParams.Instigator = Instigator;
 
 			FVector SpawnLocation = GetRandomPointInVolume();
+			UE_LOG(LogTemp, Warning, TEXT("loc %s"),*SpawnLocation.ToString());
 
 			FRotator SpawnRotation;
 			SpawnRotation.Yaw = FMath::FRand() * 360.0f;
 			SpawnRotation.Pitch = FMath::FRand() * 360.0f;
 			SpawnRotation.Roll = FMath::FRand() * 360.0f;
 
-			return World->SpawnActor<ACollectable>(WhatToSpawn, SpawnLocation, SpawnRotation, SpawnParams);
+			return World->SpawnActor<AActor>(WhatToSpawn, SpawnLocation, SpawnRotation, SpawnParams);
 		}
 	}
 	return NULL;
