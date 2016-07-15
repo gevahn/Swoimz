@@ -14,8 +14,9 @@ ACollectable::ACollectable()
 
 
 	// create the box for spawn volume
-	CollectableBox = CreateDefaultSubobject<UBoxComponent>(TEXT("CollectableBox"));
-	RootComponent = CollectableBox;
+//	CollectableBox = CreateDefaultSubobject<UBoxComponent>(TEXT("CollectableBox"));
+	CollectableMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("CollectableMesh"));
+	RootComponent = CollectableMesh;
 }
 
 // Called when the game starts or when spawned
@@ -43,8 +44,8 @@ void ACollectable::NotifyActorBeginOverlap(AActor* otherActor) {
 		buff->EffectParticle = WhichParticle;
 		buff->powerLevel = 1000;
 		testSwoimer->ActiveEffects.Add(buff);
-		
+		Destroy();
 	}
-	Destroy();
+	
 }
 
