@@ -44,7 +44,7 @@ void ACollectableSpawner::Tick( float DeltaTime )
 	}
 	else
 	{
-		time =- DeltaTime;
+		time -= DeltaTime;
 	}
 }
 
