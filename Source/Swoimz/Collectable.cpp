@@ -43,8 +43,9 @@ void ACollectable::NotifyActorBeginOverlap(AActor* otherActor) {
 		buff->EffectParticle = WhichParticle;
 		buff->powerLevel = 1000;
 		testSwoimer->ActiveEffects.Add(buff);
+		Destroy();
 		
 	}
-	Destroy();
+	
 }
 
