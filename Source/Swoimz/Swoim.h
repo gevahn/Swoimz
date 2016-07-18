@@ -71,8 +71,11 @@ public:
 
 	virtual void NotifyActorBeginOverlap(AActor* otherActor) override;
 
+	void DamageSwoimer(ASwoim* swoimer, float damage);
+
 	UFUNCTION(BlueprintNativeEvent)
 	void SparkOnOverlap();
+
 	virtual void SparkOnOverlap_Implementation();
 
 
