@@ -35,12 +35,7 @@ void ACollectableSpawner::Tick( float DeltaTime )
 	if (time <= 0)
 	{
 		ACollectable* spawnedCollectable = SpawnCollectable();
-		time = (int)FMath::FRandRange(100, 300);
-		if (spawnedCollectable) {
-			UE_LOG(LogTemp, Warning, TEXT("spawned collectable"));
-			spawnedCollectable->WhichEffect = WhichEffect;
-			spawnedCollectable->WhichParticle = WhichParticle;
-		}
+		time = (int)FMath::FRandRange(100, 300);		
 	}
 	else
 	{

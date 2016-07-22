@@ -104,4 +104,8 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Swarmer", meta = (AllowPrivateAccess = "true"))
 	class UStaticMeshComponent* SwarmerMesh;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Swarmer", meta = (AllowPrivateAccess = "true"))
+	class UMaterialBillboardComponent* HealthBar;
+
+	
 };

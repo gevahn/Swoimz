@@ -21,15 +21,17 @@ ASwoim::ASwoim()
 	acceleration = FVector(0, 0, 0);
 	avoidAhead = FVector(0, 0, 0);
 
-	CurrentHealth = 100;
-	MaxHealth = 100;
+	CurrentHealth = 1000;
+	MaxHealth = 1000;
 
 
 	mass = 1;
 
 	// Create mesh
 	SwarmerMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("SwarmerMesh"));
+	HealthBar = CreateDefaultSubobject<UMaterialBillboardComponent>(TEXT("SwarmerHealthBar"));
 	RootComponent = SwarmerMesh;
+	HealthBar->AttachTo(RootComponent);
 
 	targetSwoimer = NULL;
 
@@ -49,9 +51,14 @@ void ASwoim::BeginPlay()
 // Called every frame
 void ASwoim::Tick(float DeltaTime)
 {
-	Super::Tick(DeltaTime);
+	Super::Tick(DeltaTime);	
+	
+	
 
-
+	HealthBar->Elements[0].BaseSizeY = (CurrentHealth * 1.0 / MaxHealth) * 0.05;
+	HealthBar->Elements[0].BaseSizeX = 0.005;
+	HealthBar->MarkRenderStateDirty();
+	
 	if (CurrentHealth < 0) return;
 
 	for (auto& effect : ActiveEffects)
@@ -201,9 +208,9 @@ void ASwoim::NotifyActorBeginOverlap(AActor* otherActor) {
 	ASwoim* testSwoimer = Cast<ASwoim>(otherActor);
 	if (testSwoimer && !testSwoimer->IsPendingKill()) {
 		if (SwoimController != testSwoimer->SwoimController){
-			//UE_LOG(LogTemp, Warning, TEXT("swoimer overlapping %s"), *(otherActor->GetName()));
+			UE_LOG(LogTemp, Warning, TEXT("swoimer overlapping %d"), testSwoimer->CurrentHealth);
 			testSwoimer->CurrentHealth = testSwoimer->CurrentHealth - SwoimersArray.Num();
-			if (testSwoimer->CurrentHealth < 0) {
+			if (testSwoimer->CurrentHealth < 0) {				
 				testSwoimer->PrimaryActorTick.bCanEverTick = false;
 				testSwoimer->GetMesh()->SetSimulatePhysics(true);
 				testSwoimer->SwoimersArray.Remove(testSwoimer);
