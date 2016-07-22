@@ -208,6 +208,7 @@ void ASwoim::NotifyActorBeginOverlap(AActor* otherActor) {
 	ASwoim* testSwoimer = Cast<ASwoim>(otherActor);
 	if (testSwoimer && !testSwoimer->IsPendingKill()) {
 		if (SwoimController != testSwoimer->SwoimController){
+<<<<<<< HEAD
 			UE_LOG(LogTemp, Warning, TEXT("swoimer overlapping %d"), testSwoimer->CurrentHealth);
 			testSwoimer->CurrentHealth = testSwoimer->CurrentHealth - SwoimersArray.Num();
 			if (testSwoimer->CurrentHealth < 0) {				
@@ -219,8 +220,26 @@ void ASwoim::NotifyActorBeginOverlap(AActor* otherActor) {
 				//UE_LOG(LogTemp, Warning, TEXT("swoimer %s died"), *(otherActor->GetName()));
 			}
 			SparkOnOverlap();
+=======
+			//UE_LOG(LogTemp, Warning, TEXT("swoimer overlapping %s"), *(otherActor->GetName()));
+			DamageSwoimer(testSwoimer, SwoimersArray.Num());
+>>>>>>> origin/master
 		}
 	}
+}
+
+void ASwoim::DamageSwoimer(ASwoim* swoimer, float damage) {
+
+	swoimer->CurrentHealth = swoimer->CurrentHealth - damage;
+	if (swoimer->CurrentHealth < 0) {
+		swoimer->PrimaryActorTick.bCanEverTick = false;
+		swoimer->GetMesh()->SetSimulatePhysics(true);
+		swoimer->SwoimersArray.Remove(swoimer);
+		swoimer->SwoimController->SwoimersArray.Remove(swoimer);
+		swoimer->SwoimController->NumberOfSwoimers -= 1;
+		//UE_LOG(LogTemp, Warning, TEXT("swoimer %s died"), *(otherActor->GetName()));
+	}
+	SparkOnOverlap();
 }
 
 void ASwoim::SparkOnOverlap_Implementation(){

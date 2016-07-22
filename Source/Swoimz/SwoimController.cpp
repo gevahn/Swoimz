@@ -35,16 +35,16 @@ ASwoimController::ASwoimController()
 	ShowCursor(true);
 
 	// Defaults
-	Speedlimit = 400;
+	Speedlimit = 20;
 	Forcelimit = 40;
-	SepFactor = 10;
+	SepFactor = 160;
 	AliFactor = 5;
 	CohFactor = 5;
 	CenFactor = 20;
 	AtkFactor = 300;
 	AvoFactor1 = 30000000;
 	AvoFactor2 = 10;
-	SepDistance = 100;
+	SepDistance = 50;
 	AliDistance = 1500;
 	CohDistance = 15000;
 	LookAheadDistance = 30;
