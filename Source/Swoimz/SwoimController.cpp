@@ -5,6 +5,8 @@
 #include "Swoim.h"
 #include "EngineUtils.h"
 #include "DrawDebugHelpers.h"
+#include "Collectable.h"
+#include "Hazard.h"
 
 #define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White,text)
 
@@ -102,14 +104,15 @@ void ASwoimController::Tick( float DeltaTime )
 
 	
 	UWorld* const World = GetWorld();
-	FVector CameraLocation;
-	FRotator CameraDirection;
-	FVector mouseLocation, mouseDirection;
-	FVector moveCameraBy;
-	float mouseX, mouseY;
-	int32 viewportX, viewportY;
+
 	//UE_LOG(LogTemp, Warning, TEXT("swoim is controlled by %s"), *Controller->GetStateName().ToString());
 	if (Controller->IsLocalPlayerController()){
+		FVector CameraLocation;
+		FRotator CameraDirection;
+		FVector mouseLocation, mouseDirection;
+		FVector moveCameraBy;
+		float mouseX, mouseY;
+		int32 viewportX, viewportY;
 		
 		//UE_LOG(LogTemp, Warning, TEXT("testing swoim %s"), *(center).ToString());
 		//UE_LOG(LogTemp, Warning, TEXT("swoim is controlled by %s"), *Controller->GetStateName().ToString());
@@ -184,6 +187,76 @@ void ASwoimController::Tick( float DeltaTime )
 
 		}
 	}
+	// AI code
+	else {
+		
+		FVector nearestSwoim;
+		float nearestSwoimDist = FLT_MAX;
+		FVector nearestCollectable;
+		float nearestCollectableDist = FLT_MAX;
+		FVector nearestHazard;
+		float nearestHazardDist = FLT_MAX;
+
+
+
+		// Get nearest Swoim
+		for (TActorIterator<ASwoimController>itr(GetWorld()); itr; ++itr) {
+			if (!itr) continue;
+			if (!itr->IsValidLowLevel()) continue;
+			float distanceToSwoim = (itr->center - center).Size();
+			if (distanceToSwoim < nearestSwoimDist) {
+				nearestSwoim = itr->center;
+				nearestSwoimDist = distanceToSwoim;
+			}
+		}
+
+		// Get nearest collectable
+		for (TActorIterator<ACollectable>itr(GetWorld()); itr; ++itr) {
+			if (!itr) continue;
+			if (!itr->IsValidLowLevel()) continue;
+			float distanceToCollectable = (itr->GetActorLocation() - center).Size();
+			if (distanceToCollectable < nearestCollectableDist) {
+				nearestCollectable = itr->GetActorLocation();
+				nearestCollectableDist = distanceToCollectable;
+			}
+		}
+
+		// Get nearest Hazard
+		for (TActorIterator<AHazard>itr(GetWorld()); itr; ++itr) {
+			if (!itr) continue;
+			if (!itr->IsValidLowLevel()) continue;
+			float distanceToHazard = (itr->GetActorLocation() - center).Size();
+			if (distanceToHazard < nearestHazardDist) {
+				nearestHazard = itr->GetActorLocation();
+				nearestHazardDist = distanceToHazard;
+			}
+		}
+
+		
+		// where to go next
+		FVector aimTo;
+		FVector* p_nearestObject;
+		if (nearestSwoimDist > nearestHazardDist)
+			p_nearestObject = &nearestHazard;
+		if (nearestHazardDist > nearestCollectableDist)
+			p_nearestObject = &nearestCollectable;
+
+
+		
+		FVector swoimCM = FVector(0, 0, 0);
+		for (auto& other : SwoimersArray)
+		{
+			if (other->IsValidLowLevel()) {
+				swoimCM += other->GetActorLocation();
+			}
+		}
+		swoimCM = swoimCM / SwoimersArray.Num();
+
+		center = (aimTo - swoimCM).GetSafeNormal() * Speedlimit;
+
+
+	}
+
 
 
 	
