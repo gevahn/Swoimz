@@ -16,7 +16,7 @@ USpeedMod::USpeedMod()
 void USpeedMod::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	name = "SpeedMod";
 }
 
 

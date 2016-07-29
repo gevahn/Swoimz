@@ -35,6 +35,9 @@ public:
 
 	void ApplyEffect(class ASwoim* swoimer);
 
+	// timer
+	int time;
+
 
 
 private:

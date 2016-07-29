@@ -26,6 +26,8 @@ public:
 
 	float timeToLive;
 
+	FString name;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float powerLevel;
 

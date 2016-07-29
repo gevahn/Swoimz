@@ -15,7 +15,7 @@ UDiseaseMod::UDiseaseMod()
 void UDiseaseMod::BeginPlay()
 {
 	Super::BeginPlay();
-
+	name = "DiseaseMod";
 }
 
 

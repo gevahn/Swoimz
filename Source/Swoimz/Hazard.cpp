@@ -25,29 +25,39 @@ AHazard::AHazard()
 void AHazard::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	time = 0;
 }
 
 // Called every frame
 void AHazard::Tick( float DeltaTime )
 {
 	Super::Tick( DeltaTime );
-	TArray<AActor*> OverlappingActors;
-	GetOverlappingActors(OverlappingActors, ASwoim::StaticClass());
-	for (auto& itr : OverlappingActors)
+	if (time <= 0)
 	{
-		ASwoim* swoimer = Cast<ASwoim>(itr);
-		if (swoimer)
+		time = 2;
+		TArray<AActor*> OverlappingActors;
+		GetOverlappingActors(OverlappingActors, ASwoim::StaticClass());
+		for (auto& itr : OverlappingActors)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("swoimers on hazard"));
-	//		ApplyEffect(swoimer);
+			ASwoim* swoimer = Cast<ASwoim>(itr);
+			if (swoimer)
+			{
+				UE_LOG(LogTemp, Warning, TEXT("swoimers on hazard"));
+				ApplyEffect(swoimer);
+			}
 		}
-
+		
 	}
+	else
+	{
+		time -= DeltaTime;
+	}
+
 }
 
 void AHazard::ApplyEffect(ASwoim* swoimer) {
 	UEffect* effect = Cast<UEffect>(WhichEffect.GetDefaultObject());
+	effect->name = "abc"; // not sure.
 	effect->swoimer = swoimer;
 	effect->timeToLive = timeToLive;
 	effect->EffectParticle = WhichParticle;
@@ -55,16 +65,18 @@ void AHazard::ApplyEffect(ASwoim* swoimer) {
 	bool isEffected = false;
 	for (auto& itr : swoimer->ActiveEffects)
 	{
-		if (itr->IsA(WhichEffect->StaticClass()))
+		if (itr->name.Equals(effect->name))
 		{
 			itr->timeToLive = timeToLive;
+		UE_LOG(LogTemp, Warning, TEXT("effect already on"));
 			isEffected = true;
 			break;
 		}
 	}
 	if (!isEffected)
 	{
-		ApplyEffect(swoimer);
+		UE_LOG(LogTemp, Warning, TEXT("applying effect"));
+		swoimer->ActiveEffects.Add(effect);
 	}
 }
 
