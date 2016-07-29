@@ -20,6 +20,26 @@ public:
 	// Called every frame
 	virtual void Tick( float DeltaTime) override;
 
-	
+	UPROPERTY(EditAnywhere, Category = "Effect")
+		TSubclassOf<class UEffect>  WhichEffect;
+
+
+	UPROPERTY(EditAnywhere, Category = "Effect")
+		UParticleSystem* WhichParticle;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float timeToLive;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float powerLevel;
+
+	void ApplyEffect(class ASwoim* swoimer);
+
+
+
+private:
+	//box componenet to spawn in
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Box", meta = (AllowPrivateACcess = "true"))
+		class UBoxComponent* AreaBox;
 	
 };
