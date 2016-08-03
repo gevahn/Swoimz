@@ -61,10 +61,10 @@ void ASwoim::Tick(float DeltaTime)
 	
 	if (CurrentHealth < 0) return;
 
-	for (auto& effect : ActiveEffects)
+	for (int i = ActiveEffects.Num() - 1; i >= 0; i--)
 	{
-		if (effect->IsValidLowLevel()) {
-			effect->ApplyEffect(DeltaTime);
+		if (ActiveEffects[i]->IsValidLowLevel()) {
+			ActiveEffects[i]->ApplyEffect(DeltaTime);
 		}
 	}
 
