@@ -180,6 +180,7 @@ void ASwoim::Tick(float DeltaTime)
 		DrawDebugDirectionalArrow(GetWorld(), GetActorLocation(), GetActorLocation() + coh, 20, FColor(0, 0, 255), true, 0.05, 0, 10);
 		//UE_LOG(LogTemp, Warning, TEXT("swoimer V %f"), CohFactor);
 		//UE_LOG(LogTemp, Warning, TEXT("swoimer A %s"), *acceleration.ToString());
+	//	UE_LOG(LogTemp, Warning, TEXT("size of effects array: %d"), ActiveEffects.Num());
 	}
 		
 	lastX = GetActorLocation();

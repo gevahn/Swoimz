@@ -26,13 +26,6 @@ void UEffect::BeginPlay()
 }
 
 
-// Called every frame
-void UEffect::TickComponent( float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction )
-{
-	Super::TickComponent( DeltaTime, TickType, ThisTickFunction );
-
-	// ...
-}
 
 void UEffect::ApplyEffect(float DeltaTime) {
 

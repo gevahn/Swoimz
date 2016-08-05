@@ -31,7 +31,9 @@ void AHazard::BeginPlay()
 // Called every frame
 void AHazard::Tick( float DeltaTime )
 {
+
 	Super::Tick( DeltaTime );
+	//UE_LOG(LogTemp, Warning, TEXT("deltatime: %f"), DeltaTime);
 	if (time <= 0)
 	{
 		time = 2;
@@ -40,9 +42,9 @@ void AHazard::Tick( float DeltaTime )
 		for (auto& itr : OverlappingActors)
 		{
 			ASwoim* swoimer = Cast<ASwoim>(itr);
-			if (swoimer)
+			if (swoimer && swoimer->CurrentHealth>0)
 			{
-				UE_LOG(LogTemp, Warning, TEXT("swoimers on hazard"));
+		//		UE_LOG(LogTemp, Warning, TEXT("swoimers on hazard"));
 				ApplyEffect(swoimer);
 			}
 		}
@@ -56,26 +58,30 @@ void AHazard::Tick( float DeltaTime )
 }
 
 void AHazard::ApplyEffect(ASwoim* swoimer) {
-	UEffect* effect = Cast<UEffect>(WhichEffect.GetDefaultObject());
-	effect->name = "abc"; // not sure.
-	effect->swoimer = swoimer;
-	effect->timeToLive = timeToLive;
-	effect->EffectParticle = WhichParticle;
-	effect->powerLevel = powerLevel;
+
 	bool isEffected = false;
 	for (auto& itr : swoimer->ActiveEffects)
 	{
-		if (itr->name.Equals(effect->name))
+
+		if (itr->name.Equals(name))
 		{
 			itr->timeToLive = timeToLive;
-		UE_LOG(LogTemp, Warning, TEXT("effect already on"));
+		//UE_LOG(LogTemp, Warning, TEXT("effect already on"));
 			isEffected = true;
 			break;
 		}
+
 	}
 	if (!isEffected)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("applying effect"));
+		//UE_LOG(LogTemp, Warning, TEXT("applying effect"));
+		UEffect* effect = Cast<UEffect>(WhichEffect.GetDefaultObject());
+		effect->name = name; // not sure.
+		effect->swoimer = swoimer;
+		effect->timeToLive = timeToLive;
+		effect->EffectParticle = WhichParticle;
+		effect->powerLevel = powerLevel;
+		UGameplayStatics::SpawnEmitterAttached(WhichParticle, swoimer->GetMesh());
 		swoimer->ActiveEffects.Add(effect);
 	}
 }

@@ -86,7 +86,7 @@ void ASwoimController::BeginPlay()
 		SwoimersArray[i]->SwoimController = TWeakObjectPtr<ASwoimController>(this);
 		SwoimersArray[i]->lastDt = 0.0166;
 		SwoimersArray[i]->lastX = SwoimersArray[i]->GetActorLocation();
-
+		//SwoimersArray[i]->debugSwoimer = true;
 	}
 	SwoimersArray[0]->debugSwoimer = true;
 	UE_LOG(LogTemp, Warning, TEXT("swoimers updated"));

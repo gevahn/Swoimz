@@ -38,6 +38,7 @@ public:
 	// timer
 	int time;
 
+	FString name = "abc";
 
 
 private:
