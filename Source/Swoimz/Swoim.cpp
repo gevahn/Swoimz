@@ -52,6 +52,7 @@ void ASwoim::BeginPlay()
 void ASwoim::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);	
+	if (CurrentHealth < 0) return;
 	
 	
 
@@ -59,13 +60,14 @@ void ASwoim::Tick(float DeltaTime)
 	HealthBar->Elements[0].BaseSizeX = 0.005;
 	HealthBar->MarkRenderStateDirty();
 	
-	if (CurrentHealth < 0) return;
+	
 
-	for (int i = ActiveEffects.Num() - 1; i >= 0; i--)
+	for (int i = ActiveEffects.Num() - 1; i >= 0; --i)
 	{
-		if (ActiveEffects[i]->IsValidLowLevel()) {
+		//if (ActiveEffects[i]->IsValidLowLevel()) {
+		//UE_LOG(LogTemp, Warning, TEXT("this swoimer: %s, i: %d, effect name: %s"), *GetName(), i, *ActiveEffects[i]->GetName());
 			ActiveEffects[i]->ApplyEffect(DeltaTime);
-		}
+		//}
 	}
 
 	
@@ -215,17 +217,21 @@ void ASwoim::NotifyActorBeginOverlap(AActor* otherActor) {
 }
 
 void ASwoim::DamageSwoimer(ASwoim* swoimer, float damage) {
+	//if (debugSwoimer)
+		UE_LOG(LogTemp, Warning, TEXT("this swoimer: %s, arraysize: %d"),*GetName(),CurrentHealth);
 
+	if (swoimer->CurrentHealth < 0) return;
 	swoimer->CurrentHealth = swoimer->CurrentHealth - damage;
 	if (swoimer->CurrentHealth < 0) {
 		swoimer->PrimaryActorTick.bCanEverTick = false;
+		swoimer->SetActorTickEnabled(false);
 		swoimer->GetMesh()->SetSimulatePhysics(true);
 		swoimer->SwoimersArray.Remove(swoimer);
 		swoimer->SwoimController->SwoimersArray.Remove(swoimer);
 		swoimer->SwoimController->NumberOfSwoimers -= 1;
+		swoimer->ActiveEffects.Empty();
 		//UE_LOG(LogTemp, Warning, TEXT("swoimer %s died"), *(otherActor->GetName()));
 	}
-	SparkOnOverlap();
 }
 
 void ASwoim::SparkOnOverlap_Implementation(){

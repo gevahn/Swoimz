@@ -63,7 +63,7 @@ void AHazard::ApplyEffect(ASwoim* swoimer) {
 	for (auto& itr : swoimer->ActiveEffects)
 	{
 
-		if (itr->name.Equals(name))
+		if (WhichEffect->GetName().Equals(itr->name))
 		{
 			itr->timeToLive = timeToLive;
 		//UE_LOG(LogTemp, Warning, TEXT("effect already on"));
@@ -74,15 +74,17 @@ void AHazard::ApplyEffect(ASwoim* swoimer) {
 	}
 	if (!isEffected)
 	{
-		//UE_LOG(LogTemp, Warning, TEXT("applying effect"));
-		UEffect* effect = Cast<UEffect>(WhichEffect.GetDefaultObject());
-		effect->name = name; // not sure.
+		//UE_LOG(LogTemp, Warning, TEXT("effect name %s"), *WhichEffect->GetName());
+		//UEffect* effect = NewObject<UEffect>(WhichEffect);
+		UEffect* effect = ConstructObject<UEffect>(WhichEffect);
+		effect->name = WhichEffect->GetName(); // not sure.
 		effect->swoimer = swoimer;
 		effect->timeToLive = timeToLive;
 		effect->EffectParticle = WhichParticle;
 		effect->powerLevel = powerLevel;
-		UGameplayStatics::SpawnEmitterAttached(WhichParticle, swoimer->GetMesh());
-		swoimer->ActiveEffects.Add(effect);
+		//UGameplayStatics::SpawnEmitterAttached(WhichParticle, swoimer->GetMesh());
+		int32 index = swoimer->ActiveEffects.Add(effect);
+		//UE_LOG(LogTemp, Warning, TEXT("index: %d"),index);
 	}
 }
 

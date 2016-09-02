@@ -101,7 +101,7 @@ void ASwoimController::BeginPlay()
 void ASwoimController::Tick( float DeltaTime )
 {
 	Super::Tick( DeltaTime );
-
+	UE_LOG(LogTemp, Warning, TEXT("Tick"));
 	
 	UWorld* const World = GetWorld();
 

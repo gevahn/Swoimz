@@ -9,7 +9,7 @@
 
 UOnFire::UOnFire()
 {
-
+	
 
 }
 
@@ -23,8 +23,8 @@ void UOnFire::BeginPlay()
 
 
 void UOnFire::ApplyEffect(float DeltaTime) {
-	//swoimer->DamageSwoimer(swoimer, powerLevel);
-	swoimer->CurrentHealth -= powerLevel;
+	swoimer->DamageSwoimer(swoimer, powerLevel);
+//	swoimer->CurrentHealth -= powerLevel;
 	timeToLive -= DeltaTime;
 	if (timeToLive < 0) {
 		RemoveEffect();
