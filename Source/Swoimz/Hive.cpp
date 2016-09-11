@@ -57,6 +57,7 @@ FVector AHive::GetRandomPointInVolume()
 void AHive::SpawnController(FVector center)
 {
 	UE_LOG(LogTemp, Warning, TEXT("spawn swoim called"));
+
 	if (WhatToSpawn != NULL)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("there is somwthing to spawn"));
@@ -77,6 +78,7 @@ void AHive::SpawnController(FVector center)
 			SpawnRotation.Roll = FMath::FRand() * 360.0f;
 			ASwoimController* spawnedSwoimer = World->SpawnActor<ASwoimController>(WhatToSpawn, SpawnLocation, SpawnRotation, SpawnParams);
 			spawnedSwoimer->center = center;
+			UE_LOG(LogTemp, Warning, TEXT("after spawn center: %s"), *spawnedSwoimer->center.ToString());
 			SwoimersArray.Add(spawnedSwoimer);
 
 		}

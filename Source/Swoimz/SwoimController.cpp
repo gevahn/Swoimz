@@ -33,7 +33,7 @@ ASwoimController::ASwoimController()
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->AttachTo(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
-	*/
+	
 	ShowCursor(true);
 
 	// Defaults
@@ -52,8 +52,10 @@ ASwoimController::ASwoimController()
 	LookAheadDistance = 30;
 	LookAheadDecay = 1.5;
 	attackRadius = 30000000;
-	CameraOptionSwitch = true;
+	
 	NumberOfSwoimers = 50;
+	*/
+	CameraOptionSwitch = true;
 }
 
 // Called when the game starts or when spawned
@@ -65,7 +67,8 @@ void ASwoimController::BeginPlay()
 	for (int i = 0; i < NumberOfSwoimers; i++){
 		SwoimersArray.Add(SpawnSwoimer());
 	}
-	UE_LOG(LogTemp, Warning, TEXT("center: %s"), *center.ToString());
+	center = FVector(5831, 62, 61);
+	//UE_LOG(LogTemp, Warning, TEXT("center: %s"), *center.ToString());
 	print("swoimers spawned");
 	for (int i = 0; i < NumberOfSwoimers; i++){
 		//UE_LOG(LogTemp, Warning, TEXT("center:"), center);
@@ -92,6 +95,15 @@ void ASwoimController::BeginPlay()
 	}
 	SwoimersArray[0]->debugSwoimer = true;
 	UE_LOG(LogTemp, Warning, TEXT("swoimers updated"));
+	UE_LOG(LogTemp, Warning, TEXT("center: %s"), *center.ToString());
+	UE_LOG(LogTemp, Warning, TEXT("center: %f"), Speedlimit);
+	UE_LOG(LogTemp, Warning, TEXT("Forcelimit: %f"), Forcelimit);
+	UE_LOG(LogTemp, Warning, TEXT("AliFactor: %f"), AliFactor);
+	UE_LOG(LogTemp, Warning, TEXT("SepFactor: %f"), SepFactor);
+	UE_LOG(LogTemp, Warning, TEXT("CenFactor: %f"), CenFactor);
+	UE_LOG(LogTemp, Warning, TEXT("CohFactor: %f"), CohFactor);
+	UE_LOG(LogTemp, Warning, TEXT("center: %f"), Speedlimit);
+	UE_LOG(LogTemp, Warning, TEXT("center: %f"), Speedlimit);
 	//center = WhereToSpawn->Bounds.Origin;
 
 	
@@ -106,7 +118,7 @@ void ASwoimController::Tick( float DeltaTime )
 	//UE_LOG(LogTemp, Warning, TEXT("Tick"));
 	
 	//UWorld* const World = GetWorld();
-	
+	//UE_LOG(LogTemp, Warning, TEXT("center: %s"), *center.ToString());
 	
 	//UE_LOG(LogTemp, Warning, TEXT("swoim is controlled by %s"), *Controller->GetStateName().ToString());
 	/*if (Controller->IsLocalPlayerController()){
