@@ -57,14 +57,14 @@ FVector ACollectableSpawner::GetRandomPointInVolume()
 // Spawns a collectable 
 ACollectable* ACollectableSpawner::SpawnCollectable()
 {
-	UE_LOG(LogTemp, Warning, TEXT("spawned collectable called"));
+	//UE_LOG(LogTemp, Warning, TEXT("spawned collectable called"));
 	if (WhatToSpawn != NULL)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("there is somwthing to spawn"));
+		//UE_LOG(LogTemp, Warning, TEXT("there is somwthing to spawn"));
 		UWorld* const World = GetWorld();
 		if (World)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("there is a world"));
+			//UE_LOG(LogTemp, Warning, TEXT("there is a world"));
 			FActorSpawnParameters SpawnParams;
 			SpawnParams.Owner = this;
 			SpawnParams.Instigator = Instigator;

@@ -218,7 +218,7 @@ void ASwoim::NotifyActorBeginOverlap(AActor* otherActor) {
 
 void ASwoim::DamageSwoimer(ASwoim* swoimer, float damage) {
 	//if (debugSwoimer)
-		UE_LOG(LogTemp, Warning, TEXT("this swoimer: %s, arraysize: %d"),*GetName(),CurrentHealth);
+		//UE_LOG(LogTemp, Warning, TEXT("this swoimer: %s, arraysize: %d"),*GetName(),CurrentHealth);
 
 	if (swoimer->CurrentHealth < 0) return;
 	swoimer->CurrentHealth = swoimer->CurrentHealth - damage;

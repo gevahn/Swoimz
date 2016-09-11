@@ -21,7 +21,7 @@ ASwoimController::ASwoimController()
 	// create the box for spawn volume
 	WhereToSpawn = CreateDefaultSubobject<UBoxComponent>(TEXT("WhereToSpawn"));
 	RootComponent = WhereToSpawn;
-
+	/*
 	// Create a camera boom (pulls in towards the player if there is a collision)
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->AttachTo(RootComponent);
@@ -29,11 +29,11 @@ ASwoimController::ASwoimController()
 	CameraBoom->AddLocalOffset(FVector(-1, 0, 2));
 	CameraBoom->bUsePawnControlRotation = false; // Rotate the arm based on the controller
 
-	// Create a follow camera
+												 // Create a follow camera
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->AttachTo(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
-
+	*/
 	ShowCursor(true);
 
 	// Defaults
@@ -65,10 +65,12 @@ void ASwoimController::BeginPlay()
 	for (int i = 0; i < NumberOfSwoimers; i++){
 		SwoimersArray.Add(SpawnSwoimer());
 	}
+	UE_LOG(LogTemp, Warning, TEXT("center: %s"), *center.ToString());
 	print("swoimers spawned");
 	for (int i = 0; i < NumberOfSwoimers; i++){
+		//UE_LOG(LogTemp, Warning, TEXT("center:"), center);
 		SwoimersArray[i]->SwoimersArray = SwoimersArray;
-		SwoimersArray[i]->center = WhereToSpawn->Bounds.Origin;
+		SwoimersArray[i]->center = center;
 		SwoimersArray[i]->Speedlimit = Speedlimit;
 		SwoimersArray[i]->Forcelimit = Forcelimit;
 		SwoimersArray[i]->SepFactor = SepFactor;
@@ -90,7 +92,7 @@ void ASwoimController::BeginPlay()
 	}
 	SwoimersArray[0]->debugSwoimer = true;
 	UE_LOG(LogTemp, Warning, TEXT("swoimers updated"));
-	center = WhereToSpawn->Bounds.Origin;
+	//center = WhereToSpawn->Bounds.Origin;
 
 	
 
@@ -101,12 +103,14 @@ void ASwoimController::BeginPlay()
 void ASwoimController::Tick( float DeltaTime )
 {
 	Super::Tick( DeltaTime );
-	UE_LOG(LogTemp, Warning, TEXT("Tick"));
+	//UE_LOG(LogTemp, Warning, TEXT("Tick"));
 	
-	UWorld* const World = GetWorld();
-
+	//UWorld* const World = GetWorld();
+	
+	
 	//UE_LOG(LogTemp, Warning, TEXT("swoim is controlled by %s"), *Controller->GetStateName().ToString());
-	if (Controller->IsLocalPlayerController()){
+	/*if (Controller->IsLocalPlayerController()){
+		
 		FVector CameraLocation;
 		FRotator CameraDirection;
 		FVector mouseLocation, mouseDirection;
@@ -123,6 +127,7 @@ void ASwoimController::Tick( float DeltaTime )
 		
 		playerController->GetMousePosition(mouseX, mouseY);
 		playerController->GetViewportSize(viewportX, viewportY);
+		
 		//UE_LOG(LogTemp, Warning, TEXT("mouse position x:%f y:%f"), mouseX, mouseY);
 		//UE_LOG(LogTemp, Warning, TEXT("viewport x:%d y:%d"), viewportX, viewportY);
 		if (CameraOptionSwitch) {
@@ -131,7 +136,7 @@ void ASwoimController::Tick( float DeltaTime )
 				center = (mouseLocation - CameraLocation) * t + CameraLocation;
 			}
 		}
-
+		
 		FVector swoimCM = FVector(0, 0, 0);
 		//FVector moveCameraBy = FVector(0, 0, 0);
 		for (auto& other : SwoimersArray)
@@ -158,7 +163,7 @@ void ASwoimController::Tick( float DeltaTime )
 		//UE_LOG(LogTemp, Warning, TEXT("swoim p %f"), p.Size());
 		//UE_LOG(LogTemp, Warning, TEXT("swoim m %f"), m.Size());
 		swoimCM.Z = 300;
-		
+		/*
 		if (CameraOptionSwitch) {
 			float alpha = 0.2;
 			SetActorLocation(swoimCM * (1 - alpha) + GetActorLocation() * alpha);
@@ -261,7 +266,7 @@ void ASwoimController::Tick( float DeltaTime )
 
 	
 
-
+	*/
 	
 
 	
@@ -301,7 +306,7 @@ void ASwoimController::SetupPlayerInputComponent(class UInputComponent* InputCom
 
 
 	// Camera Zoom
-	InputComponent->BindAxis("Zoom", this, &ASwoimController::ZoomCamera);
+	//InputComponent->BindAxis("Zoom", this, &ASwoimController::ZoomCamera);
 
 	// Increase Coh Factor
 	InputComponent->BindAction("Increase Coh Factor", IE_Repeat, this, &ASwoimController::IncreaseCohFactor);
@@ -445,11 +450,11 @@ void ASwoimController::ReturnToFlock() {
 	}
 }
 
-
+/*
 void ASwoimController::ZoomCamera(float AxisValue) {
 
 	CameraBoom->TargetArmLength = CameraBoom->TargetArmLength + AxisValue;
-}
+}*/
 
 void ASwoimController::IncreaseCohFactor() {
 	UE_LOG(LogTemp, Warning, TEXT("CohFactor %f"), CohFactor);

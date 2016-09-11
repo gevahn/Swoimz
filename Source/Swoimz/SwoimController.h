@@ -91,7 +91,7 @@ public:
 
 	void Move();
 
-	void ZoomCamera(float AxisValue);
+	//void ZoomCamera(float AxisValue);
 	void CameraCenter();
 
 	void IncreaseCohFactor();
