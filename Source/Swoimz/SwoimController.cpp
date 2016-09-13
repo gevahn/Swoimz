@@ -7,6 +7,7 @@
 #include "DrawDebugHelpers.h"
 #include "Collectable.h"
 #include "Hazard.h"
+#include "Hive.h"
 
 #define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White,text)
 
@@ -94,7 +95,7 @@ void ASwoimController::BeginPlay()
 		//SwoimersArray[i]->debugSwoimer = true;
 	}
 	SwoimersArray[0]->debugSwoimer = true;
-	UE_LOG(LogTemp, Warning, TEXT("swoimers updated"));
+/*	UE_LOG(LogTemp, Warning, TEXT("swoimers updated"));
 	UE_LOG(LogTemp, Warning, TEXT("center: %s"), *center.ToString());
 	UE_LOG(LogTemp, Warning, TEXT("center: %f"), Speedlimit);
 	UE_LOG(LogTemp, Warning, TEXT("Forcelimit: %f"), Forcelimit);
@@ -104,7 +105,7 @@ void ASwoimController::BeginPlay()
 	UE_LOG(LogTemp, Warning, TEXT("CohFactor: %f"), CohFactor);
 	UE_LOG(LogTemp, Warning, TEXT("center: %f"), Speedlimit);
 	UE_LOG(LogTemp, Warning, TEXT("center: %f"), Speedlimit);
-	//center = WhereToSpawn->Bounds.Origin;
+	//center = WhereToSpawn->Bounds.Origin;*/
 
 	
 

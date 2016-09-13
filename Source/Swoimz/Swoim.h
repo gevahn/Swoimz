@@ -103,7 +103,7 @@ public:
 
 
 private:
-	// pasic swarmer
+	// basic swarmer
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Swarmer", meta = (AllowPrivateAccess = "true"))
 	class UStaticMeshComponent* SwarmerMesh;
 

@@ -30,14 +30,15 @@ public:
 	// Spawn a new swoimer
 	UFUNCTION(BlueprintCallable, Category = "Spawning")
 		void SpawnController(FVector center);
-	/*
-	// Which effect to spawn
-	UPROPERTY(EditAnywhere, Category = "Effect")
-		TSubclassOf<class UEffect>  WhichEffect;
 
-	UPROPERTY(EditAnywhere, Category = "Effect")
-		UParticleSystem* WhichParticle;
-	*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
+		int32 CurrentHealth;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
+		int32 MaxHealth;
+
+	virtual void NotifyActorBeginOverlap(AActor* otherActor) override;
+
+	void DamageHive(AHive* hive, float damage);
 protected:
 	// the pickup to spawn
 	UPROPERTY(EditAnywhere, Category = "Spawning")

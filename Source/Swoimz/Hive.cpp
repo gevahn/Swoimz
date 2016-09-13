@@ -17,6 +17,9 @@ AHive::AHive()
 	// create the box for spawn volume
 	WhereToSpawn = CreateDefaultSubobject<UBoxComponent>(TEXT("WhereToSpawn"));
 	RootComponent = WhereToSpawn;
+
+	CurrentHealth = 10000;
+	MaxHealth = 10000;
 }
 
 // Called when the game starts or when spawned
@@ -56,31 +59,58 @@ FVector AHive::GetRandomPointInVolume()
 // Spawns a collectable 
 void AHive::SpawnController(FVector center)
 {
-	UE_LOG(LogTemp, Warning, TEXT("spawn swoim called"));
+	//UE_LOG(LogTemp, Warning, TEXT("spawn swoim called"));
 
 	if (WhatToSpawn != NULL)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("there is somwthing to spawn"));
+		//UE_LOG(LogTemp, Warning, TEXT("there is somwthing to spawn"));
 		UWorld* const World = GetWorld();
 		if (World)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("there is a world"));
+			//UE_LOG(LogTemp, Warning, TEXT("there is a world"));
 			FActorSpawnParameters SpawnParams;
 			SpawnParams.Owner = this;
 			SpawnParams.Instigator = Instigator;
 			
 
 			FVector SpawnLocation = GetRandomPointInVolume();
-			UE_LOG(LogTemp, Warning, TEXT("center: %s"), *center.ToString());
+			//UE_LOG(LogTemp, Warning, TEXT("center: %s"), *center.ToString());
 			FRotator SpawnRotation;
 			SpawnRotation.Yaw = FMath::FRand() * 360.0f;
 			SpawnRotation.Pitch = FMath::FRand() * 360.0f;
 			SpawnRotation.Roll = FMath::FRand() * 360.0f;
 			ASwoimController* spawnedSwoimer = World->SpawnActor<ASwoimController>(WhatToSpawn, SpawnLocation, SpawnRotation, SpawnParams);
 			spawnedSwoimer->center = center;
-			UE_LOG(LogTemp, Warning, TEXT("after spawn center: %s"), *spawnedSwoimer->center.ToString());
+			spawnedSwoimer->ControllingHive = this;
+			//UE_LOG(LogTemp, Warning, TEXT("after spawn center: %s"), *spawnedSwoimer->center.ToString());
 			SwoimersArray.Add(spawnedSwoimer);
 
 		}
+	}
+}
+
+
+void AHive::NotifyActorBeginOverlap(AActor* otherActor) {
+	ASwoim* testSwoimer = Cast<ASwoim>(otherActor);
+	if (testSwoimer && !testSwoimer->IsPendingKill()) {
+		if (testSwoimer->SwoimController->ControllingHive != this) {
+			UE_LOG(LogTemp, Warning, TEXT("damaging Hive: %s damage:%f"), *this->GetName(), testSwoimer->SwoimersArray.Num());
+			DamageHive(this, testSwoimer->SwoimersArray.Num());
+		}
+	}
+}
+
+void AHive::DamageHive(AHive* hive, float damage) {
+	//if (debugSwoimer)
+	//UE_LOG(LogTemp, Warning, TEXT("this swoimer: %s, arraysize: %d"),*GetName(),CurrentHealth);
+
+	if (hive->CurrentHealth < 0) return;
+	UE_LOG(LogTemp, Warning, TEXT("inside damage function, current health:%f "),hive->CurrentHealth);
+	hive->CurrentHealth = hive->CurrentHealth - damage;
+	if (hive->CurrentHealth < 0) {
+		
+		hive->PrimaryActorTick.bCanEverTick = false;
+		hive->SetActorTickEnabled(false);
+		//UE_LOG(LogTemp, Warning, TEXT("swoimer %s died"), *(otherActor->GetName()));
 	}
 }

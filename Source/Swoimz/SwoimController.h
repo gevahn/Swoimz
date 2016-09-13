@@ -11,14 +11,6 @@ class SWOIMZ_API ASwoimController : public APawn
 {
 	GENERATED_BODY()
 
-	/** Camera boom positioning the camera behind the character */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	class USpringArmComponent* CameraBoom;
-
-	/** Follow camera */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	class UCameraComponent* FollowCamera;
-
 public:
 	// Sets default values for this pawn's properties
 	ASwoimController();
@@ -35,6 +27,8 @@ public:
 	FVector center;
 
 	TArray<class ASwoim*> SwoimersArray;
+
+	class AHive* ControllingHive;
 
 	// reutrns the box to spawn
 	FORCEINLINE UBoxComponent* GetWhereToSpawn() const { return WhereToSpawn; }
