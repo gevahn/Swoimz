@@ -20,6 +20,7 @@ AHive::AHive()
 
 	CurrentHealth = 10000;
 	MaxHealth = 10000;
+	Resource = 1000;
 }
 
 // Called when the game starts or when spawned
@@ -57,7 +58,7 @@ FVector AHive::GetRandomPointInVolume()
 }
 
 // Spawns a collectable 
-void AHive::SpawnController(FVector center)
+void AHive::SpawnController(FVector center,int32 type)
 {
 	//UE_LOG(LogTemp, Warning, TEXT("spawn swoim called"));
 
@@ -67,24 +68,38 @@ void AHive::SpawnController(FVector center)
 		UWorld* const World = GetWorld();
 		if (World)
 		{
-			//UE_LOG(LogTemp, Warning, TEXT("there is a world"));
-			FActorSpawnParameters SpawnParams;
-			SpawnParams.Owner = this;
-			SpawnParams.Instigator = Instigator;
-			
+			if (type == 1 && Resource < 100)
+			{
+				UE_LOG(LogTemp, Warning, TEXT("Not enough resources to spawn attackers!!"));
+				return;
+			}
+			if (type == 0 && Resource < 50)
+			{
+				UE_LOG(LogTemp, Warning, TEXT("Not enough resources to spawn defenders!!"));
+				return;
+			}
+			else
+			{
+				if (type == 1) { Resource -= 100;}
+				if (type == 0) { Resource -= 50; }
+				//UE_LOG(LogTemp, Warning, TEXT("there is a world"));
+				FActorSpawnParameters SpawnParams;
+				SpawnParams.Owner = this;
+				SpawnParams.Instigator = Instigator;
 
-			FVector SpawnLocation = GetRandomPointInVolume();
-			//UE_LOG(LogTemp, Warning, TEXT("center: %s"), *center.ToString());
-			FRotator SpawnRotation;
-			SpawnRotation.Yaw = FMath::FRand() * 360.0f;
-			SpawnRotation.Pitch = FMath::FRand() * 360.0f;
-			SpawnRotation.Roll = FMath::FRand() * 360.0f;
-			ASwoimController* spawnedSwoimer = World->SpawnActor<ASwoimController>(WhatToSpawn, SpawnLocation, SpawnRotation, SpawnParams);
-			spawnedSwoimer->center = center;
-			spawnedSwoimer->ControllingHive = this;
-			//UE_LOG(LogTemp, Warning, TEXT("after spawn center: %s"), *spawnedSwoimer->center.ToString());
-			SwoimersArray.Add(spawnedSwoimer);
 
+				FVector SpawnLocation = GetRandomPointInVolume();
+				//UE_LOG(LogTemp, Warning, TEXT("center: %s"), *center.ToString());
+				FRotator SpawnRotation;
+				SpawnRotation.Yaw = FMath::FRand() * 360.0f;
+				SpawnRotation.Pitch = FMath::FRand() * 360.0f;
+				SpawnRotation.Roll = FMath::FRand() * 360.0f;
+				ASwoimController* spawnedSwoimer = World->SpawnActor<ASwoimController>(WhatToSpawn, SpawnLocation, SpawnRotation, SpawnParams);
+				spawnedSwoimer->center = center;
+				spawnedSwoimer->ControllingHive = this;
+				//UE_LOG(LogTemp, Warning, TEXT("after spawn center: %s"), *spawnedSwoimer->center.ToString());
+				SwoimersArray.Add(spawnedSwoimer);
+			}
 		}
 	}
 }
@@ -94,7 +109,7 @@ void AHive::NotifyActorBeginOverlap(AActor* otherActor) {
 	ASwoim* testSwoimer = Cast<ASwoim>(otherActor);
 	if (testSwoimer && !testSwoimer->IsPendingKill()) {
 		if (testSwoimer->SwoimController->ControllingHive != this) {
-			UE_LOG(LogTemp, Warning, TEXT("damaging Hive: %s damage:%f"), *this->GetName(), testSwoimer->SwoimersArray.Num());
+			UE_LOG(LogTemp, Warning, TEXT("damaging Hive: %s damage:%d"), *this->GetName(), testSwoimer->SwoimersArray.Num());
 			DamageHive(this, testSwoimer->SwoimersArray.Num());
 		}
 	}
@@ -105,7 +120,7 @@ void AHive::DamageHive(AHive* hive, float damage) {
 	//UE_LOG(LogTemp, Warning, TEXT("this swoimer: %s, arraysize: %d"),*GetName(),CurrentHealth);
 
 	if (hive->CurrentHealth < 0) return;
-	UE_LOG(LogTemp, Warning, TEXT("inside damage function, current health:%f "),hive->CurrentHealth);
+	UE_LOG(LogTemp, Warning, TEXT("inside damage function, current health:%d "),hive->CurrentHealth);
 	hive->CurrentHealth = hive->CurrentHealth - damage;
 	if (hive->CurrentHealth < 0) {
 		

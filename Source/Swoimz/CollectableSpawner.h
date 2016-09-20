@@ -27,12 +27,7 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Spwaning")
 		FVector GetRandomPointInVolume();
 
-	// Which effect to spawn
-	UPROPERTY(EditAnywhere, Category = "Effect")
-		TSubclassOf<class UEffect>  WhichEffect;
-
-	UPROPERTY(EditAnywhere, Category = "Effect")
-		UParticleSystem* WhichParticle;
+	
 
 protected:
 	// the pickup to spawn

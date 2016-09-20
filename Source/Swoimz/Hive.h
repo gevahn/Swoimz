@@ -29,12 +29,14 @@ public:
 
 	// Spawn a new swoimer
 	UFUNCTION(BlueprintCallable, Category = "Spawning")
-		void SpawnController(FVector center);
+		void SpawnController(FVector center, int32 type);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
 		int32 CurrentHealth;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
 		int32 MaxHealth;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Resource")
+		int32 Resource;
 
 	virtual void NotifyActorBeginOverlap(AActor* otherActor) override;
 
