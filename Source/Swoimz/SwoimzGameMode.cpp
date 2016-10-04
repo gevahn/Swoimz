@@ -1,20 +1,31 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Swoimz.h"
+#include "Hive.h"
 #include "SwoimzGameMode.h"
 #include "Runtime/UMG/Public/Blueprint/UserWidget.h"
 
 
+
 ASwoimzGameMode::ASwoimzGameMode()
 {
-	UE_LOG(LogTemp, Warning, TEXT("GameMode"));
+	UE_LOG(LogTemp, Warning, TEXT("SwoimzGameMode"));
 }
 
 void ASwoimzGameMode::BeginPlay()
 {
 	Super::BeginPlay();
 
-	UE_LOG(LogTemp, Warning, TEXT("GameMode"));
+	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bStartWithTickEnabled = true;
+	
+	SetCurrentState(ESwoimzPlayState::EPlaying);
+	UE_LOG(LogTemp, Warning, TEXT("SwoimzGameMode"));
+	
+	PlayerOneHive = Cast<AHive>(UGameplayStatics::GetPlayerPawn(this, 0));
+	PlayerTwoHive = Cast<AHive>(UGameplayStatics::GetPlayerPawn(this, 1));
+	UE_LOG(LogTemp, Warning, TEXT("%s"), *PlayerOneHive->GetName());
+	UE_LOG(LogTemp, Warning, TEXT("%s"), *PlayerTwoHive->GetName());
 
 	if (HUDWidgetClass != nullptr)
 	{
@@ -27,4 +38,31 @@ void ASwoimzGameMode::BeginPlay()
 		}
 	}
 
+}
+
+void ASwoimzGameMode::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+
+	//UE_LOG(LogTemp, Warning, TEXT("ticking health player1:%d, player2:%d "), PlayerOneHive->CurrentHealth, PlayerTwoHive->CurrentHealth);
+	if (PlayerOneHive->CurrentHealth <= 0)
+	{
+		SetCurrentState(ESwoimzPlayState::EGameOver);
+	}
+	if (PlayerTwoHive->CurrentHealth <= 0)
+	{
+		SetCurrentState(ESwoimzPlayState::EWon);
+	}
+}
+
+
+ESwoimzPlayState ASwoimzGameMode::GetCurrentState() const
+{
+	return CurrentState;
+}
+
+void ASwoimzGameMode::SetCurrentState(ESwoimzPlayState NewState)
+{
+	CurrentState = NewState;
 }

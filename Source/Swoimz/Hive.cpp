@@ -18,9 +18,12 @@ AHive::AHive()
 	WhereToSpawn = CreateDefaultSubobject<UBoxComponent>(TEXT("WhereToSpawn"));
 	RootComponent = WhereToSpawn;
 
-	CurrentHealth = 10000;
+	CurrentHealth = 100;
 	MaxHealth = 10000;
 	Resource = 1000;
+	
+	
+	
 }
 
 // Called when the game starts or when spawned

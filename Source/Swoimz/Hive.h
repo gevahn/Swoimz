@@ -6,7 +6,7 @@
 #include "Hive.generated.h"
 
 UCLASS()
-class SWOIMZ_API AHive : public AActor
+class SWOIMZ_API AHive : public APawn
 {
 	GENERATED_BODY()
 	
@@ -20,6 +20,8 @@ public:
 	// Called every frame
 	virtual void Tick( float DeltaSeconds ) override;
 
+
+	//AHive* EnemyHive;
 	// reutrns the box to spawn
 	FORCEINLINE UBoxComponent* GetWhereToSpawn() const { return WhereToSpawn; }
 

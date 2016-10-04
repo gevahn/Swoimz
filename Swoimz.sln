@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Engine", "Engine", "{B2DD7540-A10E-4327-995E-38091BDC53E5}"
 EndProject
@@ -72,8 +72,8 @@ Global
 		{DBF6A616-B759-4246-BA79-D4AEC4961BB0}.DebugGame|Win64.Build.0 = DebugGame_Game|x64
 		{DBF6A616-B759-4246-BA79-D4AEC4961BB0}.Development Editor|HTML5.ActiveCfg = HTML5_Development_Editor|Win32
 		{DBF6A616-B759-4246-BA79-D4AEC4961BB0}.Development Editor|Win32.ActiveCfg = Development_Editor|Win32
-		{DBF6A616-B759-4246-BA79-D4AEC4961BB0}.Development Editor|Win64.ActiveCfg = Development_Editor|x64
-		{DBF6A616-B759-4246-BA79-D4AEC4961BB0}.Development Editor|Win64.Build.0 = Development_Editor|x64
+		{DBF6A616-B759-4246-BA79-D4AEC4961BB0}.Development Editor|Win64.ActiveCfg = Development_Game|x64
+		{DBF6A616-B759-4246-BA79-D4AEC4961BB0}.Development Editor|Win64.Build.0 = Development_Game|x64
 		{DBF6A616-B759-4246-BA79-D4AEC4961BB0}.Development|HTML5.ActiveCfg = HTML5_Development_Game|Win32
 		{DBF6A616-B759-4246-BA79-D4AEC4961BB0}.Development|HTML5.Build.0 = HTML5_Development_Game|Win32
 		{DBF6A616-B759-4246-BA79-D4AEC4961BB0}.Development|Win32.ActiveCfg = Development_Game|Win32
