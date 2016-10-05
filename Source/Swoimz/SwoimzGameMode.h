@@ -35,7 +35,9 @@ public:
 		ESwoimzPlayState GetCurrentState() const;
 
 	void SetCurrentState(ESwoimzPlayState NewState);
-	
+
+	class ACameraControls* PlayerOneController;
+
 
 
 protected:
@@ -47,10 +49,7 @@ protected:
 	UPROPERTY()
 		class UUserWidget* CurrentWidget;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hive")
-	AHive* PlayerOneHive;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hive")
-	AHive* PlayerTwoHive;
+
 
 private:
 	ESwoimzPlayState CurrentState;

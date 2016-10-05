@@ -21,6 +21,11 @@ public:
 	// Sets default values for this pawn's properties
 	ACameraControls();
 
+	UPROPERTY(EditAnywhere)
+		int playerIndex;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hive")
+	class AHive* playerHive;
 
 
 	// Called to bind functionality to input

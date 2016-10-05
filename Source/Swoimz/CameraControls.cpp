@@ -45,7 +45,8 @@ void ACameraControls::Tick( float DeltaTime )
 	//UE_LOG(LogTemp, Warning, TEXT("testing swoim %s"), *(center).ToString());
 	//UE_LOG(LogTemp, Warning, TEXT("swoim is controlled by %s"), *Controller->GetStateName().ToString());
 	//UE_LOG(LogTemp, Warning, TEXT("swoim is controlled"));
-	APlayerController* playerController = (APlayerController*)Controller;// = World->GetFirstPlayerController();
+	//APlayerController* playerController = (APlayerController*)Controller;// = World->GetFirstPlayerController();
+	APlayerController* playerController = UGameplayStatics::GetPlayerController(this, playerIndex);
 	playerController->DeprojectMousePositionToWorld(mouseLocation, mouseDirection);
 	playerController->GetPlayerViewPoint(CameraLocation, CameraDirection);
 

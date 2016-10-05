@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Engine", "Engine", "{B2DD7540-A10E-4327-995E-38091BDC53E5}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Engine", "Engine", "{66369767-84F3-4DB0-8613-E0FC6A18E05E}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Games", "Games", "{BB9858D8-E5E6-4CF3-8E55-9F42DF4FBBFF}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Games", "Games", "{D0189C5F-E48B-4C29-87DC-EAF0290BB65D}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UE4", "Intermediate\ProjectFiles\UE4.vcxproj", "{CA9277DC-BBC5-475F-8267-BB01A2D6F072}"
 EndProject
@@ -72,8 +72,8 @@ Global
 		{DBF6A616-B759-4246-BA79-D4AEC4961BB0}.DebugGame|Win64.Build.0 = DebugGame_Game|x64
 		{DBF6A616-B759-4246-BA79-D4AEC4961BB0}.Development Editor|HTML5.ActiveCfg = HTML5_Development_Editor|Win32
 		{DBF6A616-B759-4246-BA79-D4AEC4961BB0}.Development Editor|Win32.ActiveCfg = Development_Editor|Win32
-		{DBF6A616-B759-4246-BA79-D4AEC4961BB0}.Development Editor|Win64.ActiveCfg = Development_Game|x64
-		{DBF6A616-B759-4246-BA79-D4AEC4961BB0}.Development Editor|Win64.Build.0 = Development_Game|x64
+		{DBF6A616-B759-4246-BA79-D4AEC4961BB0}.Development Editor|Win64.ActiveCfg = Development_Editor|x64
+		{DBF6A616-B759-4246-BA79-D4AEC4961BB0}.Development Editor|Win64.Build.0 = Development_Editor|x64
 		{DBF6A616-B759-4246-BA79-D4AEC4961BB0}.Development|HTML5.ActiveCfg = HTML5_Development_Game|Win32
 		{DBF6A616-B759-4246-BA79-D4AEC4961BB0}.Development|HTML5.Build.0 = HTML5_Development_Game|Win32
 		{DBF6A616-B759-4246-BA79-D4AEC4961BB0}.Development|Win32.ActiveCfg = Development_Game|Win32
@@ -91,7 +91,7 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{CA9277DC-BBC5-475F-8267-BB01A2D6F072} = {B2DD7540-A10E-4327-995E-38091BDC53E5}
-		{DBF6A616-B759-4246-BA79-D4AEC4961BB0} = {BB9858D8-E5E6-4CF3-8E55-9F42DF4FBBFF}
+		{CA9277DC-BBC5-475F-8267-BB01A2D6F072} = {66369767-84F3-4DB0-8613-E0FC6A18E05E}
+		{DBF6A616-B759-4246-BA79-D4AEC4961BB0} = {D0189C5F-E48B-4C29-87DC-EAF0290BB65D}
 	EndGlobalSection
 EndGlobal

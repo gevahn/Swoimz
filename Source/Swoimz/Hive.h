@@ -20,7 +20,8 @@ public:
 	// Called every frame
 	virtual void Tick( float DeltaSeconds ) override;
 
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hive")
+	class AHive* EnemyHive;
 	//AHive* EnemyHive;
 	// reutrns the box to spawn
 	FORCEINLINE UBoxComponent* GetWhereToSpawn() const { return WhereToSpawn; }

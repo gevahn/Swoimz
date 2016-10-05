@@ -2,6 +2,7 @@
 
 #include "Swoimz.h"
 #include "Hive.h"
+#include "CameraControls.h"
 #include "SwoimzGameMode.h"
 #include "Runtime/UMG/Public/Blueprint/UserWidget.h"
 
@@ -22,10 +23,11 @@ void ASwoimzGameMode::BeginPlay()
 	SetCurrentState(ESwoimzPlayState::EPlaying);
 	UE_LOG(LogTemp, Warning, TEXT("SwoimzGameMode"));
 	
-	PlayerOneHive = Cast<AHive>(UGameplayStatics::GetPlayerPawn(this, 0));
-	PlayerTwoHive = Cast<AHive>(UGameplayStatics::GetPlayerPawn(this, 1));
-	UE_LOG(LogTemp, Warning, TEXT("%s"), *PlayerOneHive->GetName());
-	UE_LOG(LogTemp, Warning, TEXT("%s"), *PlayerTwoHive->GetName());
+	PlayerOneController = Cast<ACameraControls>(UGameplayStatics::GetPlayerPawn(this, 0));
+	/*PlayerOneHive = Cast<AHive>(UGameplayStatics::GetPlayerPawn(this, 0));
+	PlayerTwoHive = Cast<AHive>(UGameplayStatics::GetPlayerPawn(this, 1));*/
+	UE_LOG(LogTemp, Warning, TEXT("%p"), PlayerOneController->playerHive);
+	UE_LOG(LogTemp, Warning, TEXT("%p"), PlayerOneController->playerHive->EnemyHive);
 
 	if (HUDWidgetClass != nullptr)
 	{
@@ -46,14 +48,14 @@ void ASwoimzGameMode::Tick(float DeltaTime)
 
 
 	//UE_LOG(LogTemp, Warning, TEXT("ticking health player1:%d, player2:%d "), PlayerOneHive->CurrentHealth, PlayerTwoHive->CurrentHealth);
-	if (PlayerOneHive->CurrentHealth <= 0)
+	/*if (PlayerOneHive->CurrentHealth <= 0)
 	{
 		SetCurrentState(ESwoimzPlayState::EGameOver);
 	}
 	if (PlayerTwoHive->CurrentHealth <= 0)
 	{
 		SetCurrentState(ESwoimzPlayState::EWon);
-	}
+	}*/
 }
 
 
