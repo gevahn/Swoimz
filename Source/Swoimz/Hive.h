@@ -22,6 +22,8 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hive")
 	class AHive* EnemyHive;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hive")
+	FString Name;
 	//AHive* EnemyHive;
 	// reutrns the box to spawn
 	FORCEINLINE UBoxComponent* GetWhereToSpawn() const { return WhereToSpawn; }

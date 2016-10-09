@@ -48,14 +48,14 @@ void ASwoimzGameMode::Tick(float DeltaTime)
 
 
 	//UE_LOG(LogTemp, Warning, TEXT("ticking health player1:%d, player2:%d "), PlayerOneHive->CurrentHealth, PlayerTwoHive->CurrentHealth);
-	/*if (PlayerOneHive->CurrentHealth <= 0)
+	if (PlayerOneController->playerHive->CurrentHealth <= 0)
 	{
 		SetCurrentState(ESwoimzPlayState::EGameOver);
 	}
-	if (PlayerTwoHive->CurrentHealth <= 0)
+	if (PlayerOneController->playerHive->EnemyHive->CurrentHealth <= 0)
 	{
 		SetCurrentState(ESwoimzPlayState::EWon);
-	}*/
+	}
 }
 
 
