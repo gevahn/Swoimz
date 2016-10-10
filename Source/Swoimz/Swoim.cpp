@@ -3,6 +3,7 @@
 #include "Swoimz.h"
 #include "Swoim.h"
 #include "Effect.h"
+#include "BaseSwoimerAI.h"
 #include "SwoimController.h"
 #include "DrawDebugHelpers.h"
 
@@ -70,7 +71,10 @@ void ASwoim::Tick(float DeltaTime)
 		//}
 	}
 
-	
+	for (auto& AImove : AIArray)
+	{
+		acceleration += AImove->GetSwoimerAcceleration(this);
+	}
 
 	FVector NewLocation = GetActorLocation();
 	FVector HitLocation;
@@ -85,10 +89,7 @@ void ASwoim::Tick(float DeltaTime)
 	}
 
 	FVector cen = seek(center); //Track mouse
-
-	FVector sep = separate(); //Move away from other swoimers
-	FVector ali = align(); // aligin with other swoimers
-	FVector coh = cohesion(); // move towards the CM of the swoim
+		
 	FVector atk = FVector(0,0,0); // move toward target
 
 	//UE_LOG(LogTemp, Warning, TEXT("swoimer attacking %s"), targetSwoimer);
@@ -131,25 +132,15 @@ void ASwoim::Tick(float DeltaTime)
 	}
 	//center = center + 30 * DeltaTime*FVector(-FMath::Sin(DeltaTime), FMath::Cos(DeltaTime), 0);
 
-	sep = sep * SepFactor;
-	ali = ali * AliFactor;
-	coh = coh * CohFactor;
 	cen = cen * CenFactor;
 	atk = atk * AtkFactor;
 
 
 	FVector avoid = (avoidAhead)* AvoFactor1 + avoidClosest * AvoFactor2;
 
-
+	acceleration = acceleration + cen + avoid + atk;
 
 	//UE_LOG(LogTemp, Warning, TEXT("applying effect %s"),*avoid.ToString());
-
-	if (sep.Size() > 0) {
-		acceleration = acceleration + sep;
-	}
-	else {
-		acceleration = acceleration + sep + ali + coh + cen + avoid + atk;
-	}
 
 	avoidAhead = avoidAhead / LookAheadDecay;
 
@@ -175,15 +166,6 @@ void ASwoim::Tick(float DeltaTime)
 	//UE_LOG(LogTemp, Warning, TEXT("lastDt %f"), lastDt);
 	NewLocation = NewLocation + velocity;
 
-	if (debugSwoimer) {
-		//FlushPersistentDebugLines(GetWorld());
-		DrawDebugDirectionalArrow(GetWorld(), GetActorLocation(), GetActorLocation() + sep, 20, FColor(255, 0, 0), true, 0.05, 0, 10);
-		DrawDebugDirectionalArrow(GetWorld(), GetActorLocation(), GetActorLocation() + ali, 20, FColor(0, 255, 0), true, 0.05, 0, 10);
-		DrawDebugDirectionalArrow(GetWorld(), GetActorLocation(), GetActorLocation() + coh, 20, FColor(0, 0, 255), true, 0.05, 0, 10);
-		//UE_LOG(LogTemp, Warning, TEXT("swoimer V %f"), CohFactor);
-		//UE_LOG(LogTemp, Warning, TEXT("swoimer A %s"), *acceleration.ToString());
-	//	UE_LOG(LogTemp, Warning, TEXT("size of effects array: %d"), ActiveEffects.Num());
-	}
 		
 	lastX = GetActorLocation();
 	lastDt = DeltaTime;

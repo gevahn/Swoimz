@@ -8,6 +8,8 @@
 #include "Collectable.h"
 #include "Hazard.h"
 #include "Hive.h"
+#include "SwoimerAIMovementI.h"
+#include "BaseSwoimerAI.h"
 
 #define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White,text)
 
@@ -77,21 +79,28 @@ void ASwoimController::BeginPlay()
 		SwoimersArray[i]->center = center;
 		SwoimersArray[i]->Speedlimit = Speedlimit;
 		SwoimersArray[i]->Forcelimit = Forcelimit;
-		SwoimersArray[i]->SepFactor = SepFactor;
-		SwoimersArray[i]->AliFactor = AliFactor;
-		SwoimersArray[i]->CohFactor = CohFactor;
+		
+		USwoimerAIMovementI* basicMoveAI = ConstructObject<USwoimerAIMovementI>(USwoimerAIMovementI::StaticClass());
+		basicMoveAI->SepFactor = SepFactor;
+		basicMoveAI->AliFactor = AliFactor;
+		basicMoveAI->CohFactor = CohFactor;
+		
+		basicMoveAI->SepDistance = SepDistance;
+		basicMoveAI->AliDistance = AliDistance;
+		basicMoveAI->CohDistance = CohDistance;
+
+		SwoimersArray[i]->AIArray.Add(Cast<UBaseSwoimerAI>(basicMoveAI));
+
 		SwoimersArray[i]->CenFactor = CenFactor;
 		SwoimersArray[i]->AtkFactor = AtkFactor;
 		SwoimersArray[i]->AvoFactor1 = AvoFactor1;
 		SwoimersArray[i]->AvoFactor2 = AvoFactor2;
-		SwoimersArray[i]->SepDistance = SepDistance;
-		SwoimersArray[i]->AliDistance = AliDistance;
-		SwoimersArray[i]->CohDistance = CohDistance;
 		SwoimersArray[i]->LookAheadDistance = LookAheadDistance;
 		SwoimersArray[i]->LookAheadDecay = LookAheadDecay;		
 		SwoimersArray[i]->SwoimController = TWeakObjectPtr<ASwoimController>(this);
 		SwoimersArray[i]->lastDt = 0.0166;
 		SwoimersArray[i]->lastX = SwoimersArray[i]->GetActorLocation();
+		
 		//SwoimersArray[i]->debugSwoimer = true;
 	}
 	SwoimersArray[0]->debugSwoimer = true;

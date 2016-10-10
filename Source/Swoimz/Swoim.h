@@ -82,6 +82,7 @@ public:
 	TArray<ASwoim*> SwoimersArray;
 
 	TArray<class UEffect* > ActiveEffects;
+	TArray<class UBaseSwoimerAI* > AIArray;
 
 	UFUNCTION()
 		void OnUpCohPressed();
