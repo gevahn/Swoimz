@@ -52,22 +52,26 @@ void ACameraControls::Tick( float DeltaTime )
 
 	playerController->GetMousePosition(mouseX, mouseY);
 	playerController->GetViewportSize(viewportX, viewportY);
+	//UE_LOG(LogTemp, Warning, TEXT("mouseX:%d"),mouseX);
+	//UE_LOG(LogTemp, Warning, TEXT("mouseY:%d"),mouseY);
+	//UE_LOG(LogTemp, Warning, TEXT("viewportX:%f"), viewportX);
+	//UE_LOG(LogTemp, Warning, TEXT("viewportY:%f"), viewportY);
 
-	if (viewportX - mouseX < 10)
+	if (viewportX - mouseX < 100)
 	{
 		SetActorLocation(FVector(0, 600, 0) * DeltaTime + GetActorLocation());
 
 	}
-	if (mouseX<10)
+	if (mouseX<100)
 	{
 		SetActorLocation(FVector(0, -600, 0) * DeltaTime + GetActorLocation());
 
 	}
-	if (viewportY - mouseY<10)
+	if (viewportY - mouseY<100)
 	{
 		SetActorLocation(FVector(-600, 0, 0) * DeltaTime + GetActorLocation());
 	}
-	if (mouseY<10)
+	if (mouseY<100)
 	{
 		SetActorLocation(FVector(600, 0, 0) * DeltaTime + GetActorLocation());
 	}
