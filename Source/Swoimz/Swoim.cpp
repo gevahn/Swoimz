@@ -73,6 +73,7 @@ void ASwoim::Tick(float DeltaTime)
 
 	for (auto& AImove : AIArray)
 	{
+		//UE_LOG(LogTemp, Warning, TEXT("name of AI %s"), *AImove->GetName());
 		acceleration += AImove->GetSwoimerAcceleration(this);
 	}
 
@@ -88,7 +89,7 @@ void ASwoim::Tick(float DeltaTime)
 		//UE_LOG(LogTemp, Warning, TEXT("SwoimController is Valid"));
 	}
 
-	FVector cen = seek(center); //Track mouse
+	
 		
 	FVector atk = FVector(0,0,0); // move toward target
 
@@ -132,13 +133,13 @@ void ASwoim::Tick(float DeltaTime)
 	}
 	//center = center + 30 * DeltaTime*FVector(-FMath::Sin(DeltaTime), FMath::Cos(DeltaTime), 0);
 
-	cen = cen * CenFactor;
+	
 	atk = atk * AtkFactor;
 
 
 	FVector avoid = (avoidAhead)* AvoFactor1 + avoidClosest * AvoFactor2;
 
-	acceleration = acceleration + cen + avoid + atk;
+	acceleration = acceleration + avoid + atk;
 
 	//UE_LOG(LogTemp, Warning, TEXT("applying effect %s"),*avoid.ToString());
 

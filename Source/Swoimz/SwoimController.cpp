@@ -10,6 +10,7 @@
 #include "Hive.h"
 #include "SwoimerAIMovementI.h"
 #include "BaseSwoimerAI.h"
+#include "SwoimerAICollectorI.h"
 
 #define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White,text)
 
@@ -90,6 +91,12 @@ void ASwoimController::BeginPlay()
 		basicMoveAI->CohDistance = CohDistance;
 
 		SwoimersArray[i]->AIArray.Add(Cast<UBaseSwoimerAI>(basicMoveAI));
+
+		USwoimerAICollectorI* SwoimerAICollectorI = ConstructObject<USwoimerAICollectorI>(USwoimerAICollectorI::StaticClass());
+
+
+		SwoimersArray[i]->AIArray.Add(Cast<UBaseSwoimerAI>(SwoimerAICollectorI));
+
 
 		SwoimersArray[i]->CenFactor = CenFactor;
 		SwoimersArray[i]->AtkFactor = AtkFactor;
