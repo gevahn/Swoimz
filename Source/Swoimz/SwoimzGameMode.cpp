@@ -26,8 +26,8 @@ void ASwoimzGameMode::BeginPlay()
 	PlayerOneController = Cast<ACameraControls>(UGameplayStatics::GetPlayerPawn(this, 0));
 	/*PlayerOneHive = Cast<AHive>(UGameplayStatics::GetPlayerPawn(this, 0));
 	PlayerTwoHive = Cast<AHive>(UGameplayStatics::GetPlayerPawn(this, 1));*/
-	//UE_LOG(LogTemp, Warning, TEXT("%p"), PlayerOneController->playerHive);
-	//UE_LOG(LogTemp, Warning, TEXT("%p"), PlayerOneController->playerHive->EnemyHive);
+	UE_LOG(LogTemp, Warning, TEXT("%p"), PlayerOneController->playerHive);
+	UE_LOG(LogTemp, Warning, TEXT("%p"), PlayerOneController->playerHive->EnemyHive);
 
 	if (HUDWidgetClass != nullptr)
 	{
