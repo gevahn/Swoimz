@@ -15,7 +15,7 @@ ASwoim::ASwoim()
 	PrimaryActorTick.bCanEverTick = true;
 	PrimaryActorTick.bStartWithTickEnabled = true;
 	PrimaryActorTick.bAllowTickOnDedicatedServer = true;
-	PrimaryActorTick.bTickEvenWhenPaused = true;
+	
 
 	velocity = 750 * (FVector(FMath::Rand(), FMath::Rand(), FMath::Rand()));
 	acceleration = FVector(0, 0, 0);
