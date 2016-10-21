@@ -3,21 +3,19 @@
 #pragma once
 
 #include "BaseSwoimerAI.h"
-#include "SwoimerAICollectorI.generated.h"
+#include "SwoimerAIAttacker.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class SWOIMZ_API USwoimerAICollectorI : public UBaseSwoimerAI
+class SWOIMZ_API USwoimerAIAttacker : public UBaseSwoimerAI
 {
 	GENERATED_BODY()
-	
 public:
 	virtual FVector GetSwoimerAcceleration(class ASwoim* swoimer) override;
-	virtual class AResource* GetResourceToCollect();
-	AResource* targetToCollect = NULL;
-	FVector acceleration;
-	FVector targetLocation;
-
+	TArray<FVector> Lane;
+	int LaneIndex;
+	ASwoim* targetSwoimer;
+	
 };

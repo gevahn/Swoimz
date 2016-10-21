@@ -27,7 +27,9 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Spwaning")
 		FVector GetRandomPointInVolume();
 
-	
+	// Timer
+	UPROPERTY(EditAnywhere, Category = "Spwaning")
+	float time;
 
 protected:
 	// the pickup to spawn
@@ -42,7 +44,6 @@ private:
 	// Spawn a new swoimer
 	ACollectable* SpawnCollectable();
 
-	// Random Timer
-	int time;
+
 	
 };

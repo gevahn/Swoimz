@@ -97,11 +97,11 @@ void AHive::SpawnController(FVector center,int32 type)
 				SpawnRotation.Yaw = FMath::FRand() * 360.0f;
 				SpawnRotation.Pitch = FMath::FRand() * 360.0f;
 				SpawnRotation.Roll = FMath::FRand() * 360.0f;
-				ASwoimController* spawnedSwoimer = World->SpawnActor<ASwoimController>(WhatToSpawn, SpawnLocation, SpawnRotation, SpawnParams);
-				spawnedSwoimer->center = center;
-				spawnedSwoimer->ControllingHive = this;
+				ASwoimController* spawnedSwoim = World->SpawnActor<ASwoimController>(WhatToSpawn, SpawnLocation, SpawnRotation, SpawnParams);
+				spawnedSwoim->center = center;
+				spawnedSwoim->ControllingHive = this;
 				//UE_LOG(LogTemp, Warning, TEXT("after spawn center: %s"), *spawnedSwoimer->center.ToString());
-				SwoimersArray.Add(spawnedSwoimer);
+				SwoimersArray.Add(spawnedSwoim);
 			}
 		}
 	}

@@ -11,6 +11,8 @@
 #include "SwoimerAIMovementI.h"
 #include "BaseSwoimerAI.h"
 #include "SwoimerAICollectorI.h"
+#include "SwoimerAICollectorII.h"
+#include "SwoimerAICollectorIII.h"
 
 #define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::White,text)
 
@@ -92,7 +94,7 @@ void ASwoimController::BeginPlay()
 
 		SwoimersArray[i]->AIArray.Add(Cast<UBaseSwoimerAI>(basicMoveAI));
 
-		USwoimerAICollectorI* SwoimerAICollectorI = ConstructObject<USwoimerAICollectorI>(USwoimerAICollectorI::StaticClass());
+		USwoimerAICollectorIII* SwoimerAICollectorI = ConstructObject<USwoimerAICollectorIII>(USwoimerAICollectorIII::StaticClass());
 
 
 		SwoimersArray[i]->AIArray.Add(Cast<UBaseSwoimerAI>(SwoimerAICollectorI));
@@ -277,16 +279,7 @@ void ASwoimController::Tick( float DeltaTime )
 
 
 		
-		FVector swoimCM = FVector(0, 0, 0);
-		for (auto& other : SwoimersArray)
-		{
-			if (other->IsValidLowLevel()) {
-				swoimCM += other->GetActorLocation();
-			}
-		}
-		swoimCM = swoimCM / SwoimersArray.Num();
-
-		center = (aimTo - swoimCM).GetSafeNormal() * Speedlimit;
+		
 
 
 	}
@@ -297,7 +290,16 @@ void ASwoimController::Tick( float DeltaTime )
 
 	*/
 	
+	FVector swoimCM = FVector(0, 0, 0);
+	for (auto& other : SwoimersArray)
+	{
+		if (other->IsValidLowLevel()) {
+			swoimCM += other->GetActorLocation();
+		}
+	}
+	center = swoimCM / SwoimersArray.Num();
 
+	
 	
 	
 	//UE_LOG(LogTemp, Warning, TEXT("swoimers center %s"),*swoimCM.ToString());
