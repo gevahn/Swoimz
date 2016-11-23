@@ -38,7 +38,8 @@ public:
 
 	float Forcelimit;
 
-	
+	TWeakObjectPtr<struct FLane> Lane;
+
 	TWeakObjectPtr<class ASwoimController> SwoimController;
 	ASwoim* targetSwoimer;
 

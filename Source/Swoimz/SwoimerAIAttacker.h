@@ -14,8 +14,6 @@ class SWOIMZ_API USwoimerAIAttacker : public UBaseSwoimerAI
 	GENERATED_BODY()
 public:
 	virtual FVector GetSwoimerAcceleration(class ASwoim* swoimer) override;
-	TArray<FVector> Lane;
-	int LaneIndex;
 	ASwoim* targetSwoimer;
 	
 };

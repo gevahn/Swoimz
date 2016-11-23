@@ -38,6 +38,11 @@ public:
 
 	class ACameraControls* PlayerOneController;
 
+	TWeakObjectPtr<struct FLane> TopLane;
+
+	TWeakObjectPtr<struct FLane> MidLane;
+
+	TWeakObjectPtr<struct FLane> BotLane;
 
 
 protected:

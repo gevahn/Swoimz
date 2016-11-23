@@ -4,6 +4,7 @@
 #include "SwoimerAIAttacker.h"
 #include "Swoim.h"
 #include "SwoimController.h"
+#include "Lane.h"
 
 
 
@@ -20,7 +21,7 @@ FVector USwoimerAIAttacker::GetSwoimerAcceleration(class ASwoim* swoimer)
 		if (!itr->IsValidLowLevel()) continue;
 		float distanceToSwoim = (itr->center - attachedSwoimer->SwoimController->center).Size();
 		if (distanceToSwoim >= 0) {
-			UE_LOG(LogTemp, Warning, TEXT("testing swoim %s"), *(itr->center).ToString());
+			UE_LOG(LogTemp, Warning, TEXT("testing swoim %s"), *(itr->center).ToString())2;
 			UE_LOG(LogTemp, Warning, TEXT("testing swoim %s"), *(itr->GetName()));
 			UE_LOG(LogTemp, Warning, TEXT("testing swoim at %f"), distanceToSwoim);
 		}
@@ -31,11 +32,13 @@ FVector USwoimerAIAttacker::GetSwoimerAcceleration(class ASwoim* swoimer)
 	UE_LOG(LogTemp, Warning, TEXT("swoimers Attacking %d other swoimz"), targetSwoimers.Num());
 	if (targetSwoimers.Num() == 0)
 	{
-		if ((Lane[LaneIndex] - attachedSwoimer->GetActorLocation()).Size() < 50 && LaneIndex<Lane.Num())
+		FVector SwoimLocation = attachedSwoimer->GetActorLocation();
+		int LaneIndex = attachedSwoimer->Lane->GetClosestPoint(SwoimLocation);
+		if ((attachedSwoimer->Lane->PointArray[LaneIndex] - SwoimLocation).Size() < 50 && LaneIndex<attachedSwoimer->Lane->PointArray.Num())
 		{
 			LaneIndex++;
 		}
-		return (Lane[LaneIndex] - attachedSwoimer->GetActorLocation()).GetSafeNormal()*attachedSwoimer->CenFactor;
+		return (attachedSwoimer->Lane->PointArray[LaneIndex] - attachedSwoimer->GetActorLocation()).GetSafeNormal()*attachedSwoimer->CenFactor;
 	}
 	
 	int32 indexToAttack = FMath::RandRange(0, targetSwoimers.Num() - 1);
