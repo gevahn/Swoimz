@@ -38,7 +38,8 @@ public:
 
 	float Forcelimit;
 
-	
+	TWeakObjectPtr<struct FLane> Lane;
+
 	TWeakObjectPtr<class ASwoimController> SwoimController;
 	ASwoim* targetSwoimer;
 
@@ -82,6 +83,7 @@ public:
 	TArray<ASwoim*> SwoimersArray;
 
 	TArray<class UEffect* > ActiveEffects;
+	TArray<class UBaseSwoimerAI* > AIArray;
 
 	UFUNCTION()
 		void OnUpCohPressed();

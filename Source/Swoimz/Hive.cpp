@@ -31,22 +31,29 @@ void AHive::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	time = 0;
+	time = 200;
 }
 
 // Called every frame
 void AHive::Tick( float DeltaTime )
 {
 	Super::Tick( DeltaTime );
-	if (time <= 0)
+	float timer = time;
+	if (Name == "EnemyHive")
 	{
-		
-		time = (int)FMath::FRandRange(100, 300);
+	
+		if (timer <= 0)
+		{
+
+			SpawnController(GetRandomPointInVolume(), 3);
+			time = 200;
+		}
+		else
+		{
+			time -= DeltaTime;
+		}
 	}
-	else
-	{
-		time -= DeltaTime;
-	}
+
 }
 
 // Gets a random point inside the volume
@@ -97,11 +104,11 @@ void AHive::SpawnController(FVector center,int32 type)
 				SpawnRotation.Yaw = FMath::FRand() * 360.0f;
 				SpawnRotation.Pitch = FMath::FRand() * 360.0f;
 				SpawnRotation.Roll = FMath::FRand() * 360.0f;
-				ASwoimController* spawnedSwoimer = World->SpawnActor<ASwoimController>(WhatToSpawn, SpawnLocation, SpawnRotation, SpawnParams);
-				spawnedSwoimer->center = center;
-				spawnedSwoimer->ControllingHive = this;
+				ASwoimController* spawnedSwoim = World->SpawnActor<ASwoimController>(WhatToSpawn, SpawnLocation, SpawnRotation, SpawnParams);
+				spawnedSwoim->center = center;
+				spawnedSwoim->ControllingHive = this;
 				//UE_LOG(LogTemp, Warning, TEXT("after spawn center: %s"), *spawnedSwoimer->center.ToString());
-				SwoimersArray.Add(spawnedSwoimer);
+				SwoimersArray.Add(spawnedSwoim);
 			}
 		}
 	}
