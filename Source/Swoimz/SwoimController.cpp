@@ -61,6 +61,7 @@ ASwoimController::ASwoimController()
 	
 	NumberOfSwoimers = 50;
 	*/
+
 	CameraOptionSwitch = true;
 }
 

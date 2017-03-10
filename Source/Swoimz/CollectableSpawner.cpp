@@ -25,18 +25,19 @@ ACollectableSpawner::ACollectableSpawner()
 void ACollectableSpawner::BeginPlay()
 {
 	Super::BeginPlay();
-	time = 0;
+	time = 3;
 }
 
 // Called every frame
 void ACollectableSpawner::Tick( float DeltaTime )
 {
+	
 	Super::Tick( DeltaTime );
 	float timer = time;
 	if (timer <= 0)
 	{
 		ACollectable* spawnedCollectable = SpawnCollectable();
-		timer = time;
+		time = 3;
 	}
 	else
 	{

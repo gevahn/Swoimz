@@ -19,8 +19,8 @@ FVector USwoimerAICollectorI::GetSwoimerAcceleration(class ASwoim* swoimer)
 		return FVector(0, 0, 0);
 	}
 	targetLocation = targetToCollect->GetActorLocation();
-	UE_LOG(LogTemp, Warning, TEXT("target location %s"), *targetLocation.ToString());
-	UE_LOG(LogTemp, Warning, TEXT("name of target %s"), *targetToCollect->GetName());
+//	UE_LOG(LogTemp, Warning, TEXT("target location %s"), *targetLocation.ToString());
+	//UE_LOG(LogTemp, Warning, TEXT("name of target %s"), *targetToCollect->GetName());
 	//UE_LOG(LogTemp, Warning, TEXT("mesh ahead, avoid at dir Z %f"), avoid.Z);
 	return (targetLocation - attachedSwoimer->GetActorLocation()).GetSafeNormal()*attachedSwoimer->CenFactor;
 }
@@ -31,7 +31,7 @@ AResource* USwoimerAICollectorI::GetResourceToCollect()
 	UWorld* const World = attachedSwoimer->GetWorld();
 	
 	if (World) {
-		UE_LOG(LogTemp, Warning, TEXT("name of world? %s"), *World->GetName());
+		//UE_LOG(LogTemp, Warning, TEXT("name of world? %s"), *World->GetName());
 		AResource* toCollect = NULL;
 		for (TActorIterator<AResource>itr(World); itr; ++itr) {
 			if (!itr) continue;

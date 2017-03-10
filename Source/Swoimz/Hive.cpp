@@ -31,22 +31,29 @@ void AHive::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	time = 0;
+	time = 200;
 }
 
 // Called every frame
 void AHive::Tick( float DeltaTime )
 {
 	Super::Tick( DeltaTime );
-	if (time <= 0)
+	float timer = time;
+	if (Name == "EnemyHive")
 	{
-		
-		time = (int)FMath::FRandRange(100, 300);
+	
+		if (timer <= 0)
+		{
+
+			SpawnController(GetRandomPointInVolume(), 3);
+			time = 200;
+		}
+		else
+		{
+			time -= DeltaTime;
+		}
 	}
-	else
-	{
-		time -= DeltaTime;
-	}
+
 }
 
 // Gets a random point inside the volume
